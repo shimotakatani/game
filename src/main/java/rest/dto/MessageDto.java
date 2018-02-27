@@ -1,5 +1,8 @@
 package rest.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Класс для передачи сообщений телеграмм-боту
  *
@@ -21,6 +24,15 @@ public class MessageDto {
 
     @Override
     public String toString(){
-        return this.message + " " + this.chatId;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = null;
+        try {
+            jsonString = mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+        System.out.println("json " + jsonString);
+        return jsonString;
     }
 }

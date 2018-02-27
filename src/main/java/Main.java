@@ -1,9 +1,12 @@
+import engine.Game;
 import logger.SparkUtils;
 import org.apache.log4j.BasicConfigurator;
 import rest.MainResource;
 
 import org.apache.log4j.Logger;
+import rest.dto.MessageDto;
 
+import static spark.Spark.get;
 import static spark.Spark.port;
 
 /**
@@ -15,32 +18,27 @@ import static spark.Spark.port;
 public class Main {
     public static Logger logger = Logger.getLogger(MainResource.class);
 
+    public static Game game = new Game();
+
     public static void main(String[] args) {
 
 
         BasicConfigurator.configure();
 
         SparkUtils.createServerWithRequestLog(logger);
-        port(4567);
+        port(8090);
 
-        MainResource.publicResource();
+        get("/game", (req, res) -> test());
+        //MainResource.publicResource();
 
-        Thread gameThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    logger.info("Hello from infinity loop\n");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-            }
-        });
+//        Game game = new Game();
+        Thread gameThread = new Thread(game);
 
         gameThread.start();
 
+    }
+
+    private static MessageDto test(){
+        return new MessageDto(game.getGameSerilization(), 1);
     }
 }

@@ -1,5 +1,8 @@
 package rest;
 
+import engine.Game;
+import rest.dto.MessageDto;
+
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -10,12 +13,12 @@ import static spark.Spark.post;
  */
 public class MainResource {
 
-    public static void publicResource(){
+       public static void publicResource(){
         get("/test", (req, res) -> test());
 
     }
 
-    private static String test(){
-        return "This is test message by rest from easySparkApplication";
+    private static MessageDto test(){
+        return new MessageDto("This is test message by rest from easySparkApplication", 1);
     }
 }

@@ -1,4 +1,5 @@
 import engine.Game;
+import engine.objects.GameOptions;
 import logger.SparkUtils;
 import org.apache.log4j.BasicConfigurator;
 import rest.MainResource;
@@ -18,7 +19,9 @@ import static spark.Spark.port;
 public class Main {
     public static Logger logger = Logger.getLogger(MainResource.class);
 
-    public static Game game = new Game();
+    public static GameOptions startArgs = new GameOptions();
+
+    public static Game game = new Game(logger, startArgs);
 
     public static void main(String[] args) {
 

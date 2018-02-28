@@ -4,12 +4,14 @@ import consts.ColorConst;
 import consts.DirectionConst;
 import engine.objects.GameMap;
 import engine.objects.GameMapCell;
+import engine.tactor.Tactor;
 
 import java.util.Random;
 
 /**
  * create time 26.02.2018
  *
+ * Класс кролика, который ест траву
  * @author nponosov
  */
 public class Rabbit {
@@ -22,24 +24,43 @@ public class Rabbit {
     public int direction = DirectionConst.E;
 
 
-    private void eatGrass(GameMapCell cell){
+    private void eatGrass(GameMapCell cell, Tactor tactor){
         if (cell.color == ColorConst.GREEN) {
             cell.color = ColorConst.WHITE;
+            cell.eatedAtTime = tactor.getInnerTime();
             eatedGrass++;
         }
     }
 
-    public void doTact(GameMap map){
+    public void doTact(GameMap map, Tactor tactor){
         if (map.getCell(y, x).color == ColorConst.GREEN){
-            eatGrass(map.getCell(y, x));
+            eatGrass(map.getCell(y, x), tactor);
         } else {
-            changeDirection();
+            changeDirection(map.capacity);
             goForvard(map.capacity);
         }
     }
 
-    private void changeDirection(){
-        direction = random.nextInt(8);
+    private void changeDirection(int capacity){
+        do {
+            direction = random.nextInt(8);
+        } while (!canGoTo(direction, capacity));
+    }
+
+    private boolean canGoTo(int direction, int capacity){
+        if (direction == DirectionConst.E || direction == DirectionConst.NE || direction == DirectionConst.SE){
+            if (x == capacity) return false;
+        }
+        if (direction == DirectionConst.W || direction == DirectionConst.NW || direction == DirectionConst.SW){
+            if (x == 0) return false;
+        }
+        if (direction == DirectionConst.S || direction == DirectionConst.SE || direction == DirectionConst.SW){
+            if (y == capacity) return false;
+        }
+        if (direction == DirectionConst.N || direction == DirectionConst.NE || direction == DirectionConst.NW){
+            if (y == 0) return false;
+        }
+        return true;
     }
 
     private void goForvard(int capacity){
@@ -71,4 +92,8 @@ public class Rabbit {
         }
     }
 
+    @Override
+    public String toString() {
+        return "\nRabbit x:" + x + " y:" + y + " \n";
+    }
 }

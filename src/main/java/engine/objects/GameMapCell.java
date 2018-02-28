@@ -11,4 +11,5 @@ import consts.ColorConst;
 public class GameMapCell {
 
     public int color = ColorConst.GREEN;
+    public long eatedAtTime = 0;
 }

@@ -22,4 +22,6 @@ public class CommonConst {
     public static final int WALL_MAX_LENGTH = 8;
     //Максимальное время жизни объектов мира в тактах
     public static final long MAX_LENGTH_OF_LIFE = 200000000000L;
+    //Зайчья дальность видимости
+    public static final int MAX_RANGE_RABBIT = 20;
 }

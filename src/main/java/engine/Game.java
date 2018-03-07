@@ -60,21 +60,5 @@ public class Game implements Runnable {
 
     }
 
-    public String getGameSerilization() {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < map.capacity; i++){
-            Vector<GameMapCell> row = map.getRow(i);
-            for (int j = 0; j < map.capacity; j++) {
-                if ( ( j == rabbit.x ) && ( i == rabbit.y )){
-                    builder.append(ColorConst.RABBIT);
-                } else {
-                    builder.append(row.get(j).color);
-                }
-            }
-            builder.append("\n");
-        }
 
-        builder.append(rabbit.toString());
-        return builder.toString();
-    }
 }

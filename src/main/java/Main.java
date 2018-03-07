@@ -1,4 +1,5 @@
 import engine.Game;
+import engine.SerialisationHelper;
 import engine.objects.GameOptions;
 import logger.SparkUtils;
 import org.apache.log4j.BasicConfigurator;
@@ -42,6 +43,6 @@ public class Main {
     }
 
     private static MessageDto test(){
-        return new MessageDto(game.getGameSerilization(), 1);
+        return new MessageDto(SerialisationHelper.getGameSerialization(game), 1);
     }
 }

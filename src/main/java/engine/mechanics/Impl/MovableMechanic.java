@@ -1,8 +1,10 @@
 package engine.mechanics.Impl;
 
 import consts.DirectionConst;
+import engine.Game;
 import engine.objects.GameMap;
 import engine.objects.GameMapCell;
+import engine.objects.units.Rabbit;
 
 /**
  * create time 06.03.2018
@@ -39,5 +41,12 @@ public class MovableMechanic {
             }
         }
         return map.getCell(y,x);
+    }
+
+    public static boolean hasAnybodyOnCell(Game game, int x, int y){
+        for (Rabbit rabbit : game.rabbits) {
+            if (rabbit.x == x && rabbit.y == y) return true;
+        }
+        return false;
     }
 }

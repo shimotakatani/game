@@ -18,7 +18,7 @@ public class GameMap {
     public GameMap(int capacity){
         rowsOfCells = new Vector<>(capacity);
         for(int i = 0; i < capacity; i++){
-            rowsOfCells.add(i, setNewVector(capacity));
+            rowsOfCells.add(i, setNewVector(capacity, i));
         }
         this.capacity = capacity;
     }
@@ -27,14 +27,14 @@ public class GameMap {
         int MAGIC_VECTOR_NUMBER = 10;
         rowsOfCells = new Vector<>();
         for(int i = 0; i < MAGIC_VECTOR_NUMBER; i++){
-            rowsOfCells.add(i, setNewVector(MAGIC_VECTOR_NUMBER));
+            rowsOfCells.add(i, setNewVector(MAGIC_VECTOR_NUMBER, i));
         }
     }
 
-    private Vector<GameMapCell> setNewVector(int capacity){
+    private Vector<GameMapCell> setNewVector(int capacity, int y){
         Vector<GameMapCell> newVector = new Vector<GameMapCell>(capacity);
         for(int i = 0; i < capacity; i++){
-            newVector.add(i, new GameMapCell());
+            newVector.add(i,new GameMapCell(i, y));
         }
         return newVector;
     }

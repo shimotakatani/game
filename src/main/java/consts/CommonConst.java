@@ -16,4 +16,8 @@ public class CommonConst {
     public static final int MAP_CAPACITY = 20;
     //Время сна между шагами(тактами) игры
     public static final long SLEEP_TIME_OUT = 1000L;
+    //Максимальное количество стен
+    public static final int WALL_MAX_COUNT = 10;
+    //Максимальная длинна стены
+    public static final int WALL_MAX_LENGTH = 8;
 }

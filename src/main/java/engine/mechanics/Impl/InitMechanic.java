@@ -1,6 +1,7 @@
 package engine.mechanics.Impl;
 
 import consts.ColorConst;
+import consts.CommonConst;
 import engine.objects.GameMap;
 import engine.objects.GameOptions;
 import engine.objects.units.Rabbit;
@@ -16,12 +17,29 @@ public class InitMechanic {
 
     public static void initMap(GameMap map, GameOptions options){
 
-        for(int i = 0; i < map.capacity; i++){
-            if (i % 2 == 0) {
-                map.getCell(i,i).color = ColorConst.WALL;
-            }
+        Random random = new Random();
+        //Инициализация стен
+        int wallX, wallY, wallLength;
+        boolean isVerticalWall;
+        int countWalls = random.nextInt(CommonConst.WALL_MAX_COUNT) + 1;
 
+        for (int i = 0; i < countWalls; i++) {
+            isVerticalWall = random.nextBoolean();
+            wallX = random.nextInt(map.capacity);
+            wallY = random.nextInt(map.capacity);
+            wallLength = random.nextInt(CommonConst.WALL_MAX_LENGTH);
+            for (int j = 0; j < wallLength; j++) {
+                map.getCell(wallY,wallX).color = ColorConst.WALL;
+
+                if (isVerticalWall) {
+                    wallY = Math.min(wallY + 1, map.capacity-1);
+                } else {
+                    wallX = Math.min(wallX + 1, map.capacity-1);
+                }
+            }
         }
+
+        //Другие инициализации карты
 
     }
 

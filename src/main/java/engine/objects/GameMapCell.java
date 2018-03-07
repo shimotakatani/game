@@ -11,6 +11,6 @@ import consts.CommonConst;
  */
 public class GameMapCell {
 
-    public int color = ColorConst.GREEN;
+    public int color = ColorConst.WHITE;
     public long eatedAtTime = CommonConst.MAX_LENGTH_OF_LIFE;
 }

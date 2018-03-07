@@ -12,4 +12,5 @@ public class ColorConst {
     public static final int WHITE = 0;
     public static final int RABBIT = 3;
     public static final int WALL = 4;
+    public static final int BLACK = 2;
 }

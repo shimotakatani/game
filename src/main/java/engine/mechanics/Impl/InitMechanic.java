@@ -21,7 +21,7 @@ public class InitMechanic {
         //Инициализация стен
         int wallX, wallY, wallLength;
         boolean isVerticalWall;
-        int countWalls = random.nextInt(CommonConst.WALL_MAX_COUNT) + 1;
+        int countWalls = random.nextInt(CommonConst.WALL_MAX_COUNT) + 5;
 
         for (int i = 0; i < countWalls; i++) {
             isVerticalWall = random.nextBoolean();

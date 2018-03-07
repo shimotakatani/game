@@ -3,6 +3,7 @@ package engine;
 import consts.ColorConst;
 import consts.CommonConst;
 import engine.actions.GrassUp;
+import engine.mechanics.Impl.InitMechanic;
 import engine.objects.GameMap;
 import engine.objects.GameMapCell;
 import engine.objects.GameOptions;
@@ -37,6 +38,8 @@ public class Game implements Runnable {
 
         this.rabbit = new Rabbit();
         this.map = new GameMap(CommonConst.MAP_CAPACITY);
+        InitMechanic.initMap(this.map, this.startArgs);
+        InitMechanic.initRabbit(this.map, this.rabbit);
     }
 
     @Override

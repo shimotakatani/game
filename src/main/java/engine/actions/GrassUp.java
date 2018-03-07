@@ -27,6 +27,7 @@ public class GrassUp {
         if (random.nextInt(CommonConst.RANDOM_NUMBER_FOR_GRASS) == 0) {
             int x = random.nextInt(map.capacity);
             int y = random.nextInt(map.capacity);
+            if (map.getCell(x, y).color == ColorConst.WALL) return;
             map.getCell(x, y).color = ColorConst.GREEN;
         }
     }

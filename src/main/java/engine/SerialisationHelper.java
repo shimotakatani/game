@@ -5,7 +5,9 @@ import consts.CommonConst;
 import engine.objects.GameMap;
 import engine.objects.GameMapCell;
 import engine.objects.units.Rabbit;
+import engine.objects.units.RabbitComporator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -22,8 +24,8 @@ public class SerialisationHelper {
     public static String getGameSerialization(Game game, Long clientId) {
         List<Rabbit> rabbits =  game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).collect(Collectors.toList());
         if (rabbits.size() != 1) return "Не был найден заяц для текущего чата";
-        int tempX = game.rabbits.get(0).x;
-        int tempY = game.rabbits.get(0).y;
+        int tempX = rabbits.get(0).x;
+        int tempY = rabbits.get(0).y;
         GameMap tempMap = getMapCut(game.map, tempX, tempY);
 
         game.rabbits.forEach(rabbit -> {
@@ -34,7 +36,7 @@ public class SerialisationHelper {
         StringBuilder builder = new StringBuilder();
 
         builder.append(getMapSerialization(tempMap));
-        builder.append(game.rabbits.get(0).toString());
+        builder.append(rabbits.get(0).toString());
         return builder.toString();
     }
 
@@ -88,6 +90,52 @@ public class SerialisationHelper {
             cell.color = ColorConst.WALL;
         } else {
             cell.color = ColorConst.GREEN;
+        }
+    }
+
+    public static String getRabbitSerilization(Game game, Long clientId){
+        if (game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).count() != 0){
+            return game.rabbits.stream().filter(rabbit1 -> rabbit1.clientId.equals(clientId)).findFirst().get().name;
+        } else {
+            return "У вас нет ещё зайца. Обязательно заведите.";
+        }
+    }
+
+    public static String getRabbitScoreSerilization(Game game, Long clientId){
+        if (game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).count() != 0){
+            return game.rabbits.stream().filter(rabbit1 -> rabbit1.clientId.equals(clientId)).findFirst().get().eatedGrass + "";
+        } else {
+            return "У вас нет ещё зайца. Обязательно заведите.";
+        }
+    }
+
+    public static String getGeneralScoreSerilization(Game game, Long clientId){
+
+        List<Rabbit> rabbits =  new ArrayList();
+        rabbits.addAll(game.rabbits);
+        rabbits.sort(new RabbitComporator());
+
+        StringBuilder scoreBuilder = new StringBuilder();
+        for (int i = 0; i < rabbits.size(); i++) {
+            scoreBuilder.append(i+1).append(". ")
+                    .append(rabbits.get(i).name)
+                    .append(" съел ")
+                    .append(rabbits.get(i).eatedGrass)
+                    .append(" пучков травы\n");
+        }
+
+        if (game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).count() != 0){
+            Rabbit yourRabbit = game.rabbits.stream().filter(rabbit1 -> rabbit1.clientId.equals(clientId)).findFirst().get();
+            return scoreBuilder.append("\nВаш заяц ")
+                    .append(yourRabbit.name)
+                    .append(" съел ")
+                    .append(yourRabbit.eatedGrass)
+                    .append(" пучков травы и находится на ")
+                    .append(rabbits.indexOf(yourRabbit) + 1)
+                    .append(" месте.\n")
+                    .toString();
+        } else {
+            return scoreBuilder.append("\nУ вас нет ещё зайца. Обязательно заведите.").toString();
         }
     }
 }

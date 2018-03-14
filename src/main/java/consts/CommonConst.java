@@ -13,13 +13,13 @@ public class CommonConst {
     //знаменатель вероятности, с которой обновляем случайно выбранную лужайку травы
     public static final int RANDOM_NUMBER_FOR_GRASS = 20;
     //Размерность карты
-    public static final int MAP_CAPACITY = 20;
+    public static final int MAP_CAPACITY = 200;
     //Время сна между шагами(тактами) игры
     public static final long SLEEP_TIME_OUT = 100L;
     //Максимальное количество стен
-    public static final int WALL_MAX_COUNT = 6;
+    public static final int WALL_MAX_COUNT = 60;
     //Максимальная длинна стены
-    public static final int WALL_MAX_LENGTH = 2;
+    public static final int WALL_MAX_LENGTH = 20;
     //Максимальное время жизни объектов мира в тактах
     public static final long MAX_LENGTH_OF_LIFE = 200000000000L;
     //Зайчья дальность видимости

@@ -35,7 +35,9 @@ public class Game implements Runnable {
         this.stats = new GameStats();
         this.tactor = new Tactor();
 
-        this.rabbits.add(new Rabbit());
+        Rabbit serverRabbit = new Rabbit();
+        serverRabbit.name = "Серверный заяц";
+        this.rabbits.add(serverRabbit);
         this.map = new GameMap(CommonConst.MAP_CAPACITY);
         InitMechanic.initMap(this.map, this.startArgs);
         InitMechanic.initRabbit(this.map, this.rabbits.get(0));

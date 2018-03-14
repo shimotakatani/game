@@ -27,6 +27,7 @@ public class Rabbit {
     public int previousY = 0;
     public int direction = DirectionConst.E;
     public Long clientId = 0L;
+    public String name = "";
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
@@ -132,7 +133,7 @@ public class Rabbit {
 
     @Override
     public String toString() {
-        return "\nRabbit x:" + x + " y:" + y;
+        return "\nЗаяц по имени " + name + " находится x:" + x + " y:" + y + "." + " Он съел " + eatedGrass + " пучков травы";
     }
 
     public void setX(int x){

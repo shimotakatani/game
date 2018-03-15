@@ -10,6 +10,7 @@ import game.engine.objects.units.Rabbit;
 import game.engine.tactor.Tactor;
 import org.apache.log4j.Logger;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 

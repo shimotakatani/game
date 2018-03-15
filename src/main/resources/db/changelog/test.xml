@@ -21,4 +21,25 @@
             );
         </sql>
     </changeSet>
+
+    <changeSet id="201803152040" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'rabbit'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу rabbit</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."rabbit" (
+            id BIGINT CONSTRAINT rabbit_id PRIMARY KEY,
+            eated_grass BIGINT default 0,
+            x INTEGER,
+            y INTEGER,
+            direction INTEGER,
+            clientId BIGINT NOT NULL,
+            name TEXT
+            );
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

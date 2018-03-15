@@ -1,5 +1,6 @@
 package game.helper;
 
+import game.data.repositories.RabbitRepository;
 import game.engine.Game;
 import game.engine.SerialisationHelper;
 import game.engine.objects.GameOptions;
@@ -19,10 +20,12 @@ public class GameHelper {
 
     public static Game game;
 
-    public static void startServer(){
-        startArgs = new GameOptions();
-        game = new Game(null, startArgs);
-        game.run();
+    public static void startServer(RabbitRepository repository){
+        if (game == null) {
+            startArgs = new GameOptions();
+            game = new Game(null, startArgs, repository);
+            game.run();
+        }
     }
 
     public static MessageDto test(){

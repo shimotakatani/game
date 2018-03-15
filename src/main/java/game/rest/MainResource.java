@@ -1,10 +1,13 @@
 package game.rest;
 
+import game.data.repositories.RabbitRepository;
 import game.engine.SerialisationHelper;
 import game.engine.commands.EndGameCommand;
 import game.engine.commands.NameCommand;
+import game.engine.commands.SaveCommand;
 import game.engine.commands.StartGameCommand;
 import game.helper.GameHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +22,9 @@ import game.rest.dto.MessageDto;
  */
 @RestController
 public class MainResource {
+
+    @Autowired
+    private RabbitRepository rabbitRepository;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MessageDto test(){
@@ -52,5 +58,18 @@ public class MainResource {
     public MessageDto score(@RequestParam("chatId") Long clientId){
         return new MessageDto(SerialisationHelper.getGeneralScoreSerilization(GameHelper.game, clientId), 1);
     }
+
+    @RequestMapping(value = "/save", method = RequestMethod.GET)
+    public MessageDto save(){
+        SaveCommand.execute(GameHelper.game, rabbitRepository);
+        return new MessageDto("Сохранение зайцев успешно завершено", 1);
+    }
+
+    @RequestMapping(value = "/startServer", method = RequestMethod.GET)
+    public MessageDto startServer(){
+        GameHelper.startServer(rabbitRepository);
+        return new MessageDto("Игра на сервере запущена", 1);
+    }
+
 
 }

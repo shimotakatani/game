@@ -12,12 +12,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "customer")
-public class Customer implements Serializable {
-
-    private static final long serialVersionUID = -3009157732242241606L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class Customer extends AbstractEntity implements Serializable {
 
     @Column(name = "firstname")
     private String firstName;
@@ -35,6 +30,6 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id, firstName, lastName);
+        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", getId(), firstName, lastName);
     }
 }

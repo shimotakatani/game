@@ -1,6 +1,9 @@
 package game.engine;
 
 import game.consts.CommonConst;
+import game.data.entity.RabbitEntity;
+import game.data.repositories.RabbitRepository;
+import game.data.transformers.RabbitTransformer;
 import game.engine.actions.GrassUp;
 import game.engine.mechanics.Impl.InitMechanic;
 import game.engine.objects.GameMap;
@@ -30,15 +33,19 @@ public class Game implements Runnable {
     public GameMap map;
     public Logger logger;
 
-    public Game(Logger logger, GameOptions startArgs){
+    public Game(Logger logger, GameOptions startArgs, RabbitRepository repository){
         this.logger = logger;
         this.startArgs = startArgs;
         this.stats = new GameStats();
         this.tactor = new Tactor();
 
-        Rabbit serverRabbit = new Rabbit();
-        serverRabbit.name = "Серверный заяц";
-        this.rabbits.add(serverRabbit);
+        List<RabbitEntity> rabbitsFromDB = new ArrayList<>();
+        repository.findAll().iterator().forEachRemaining(rabbitsFromDB::add);
+        rabbitsFromDB.forEach(rabbitFromDB -> {
+            Rabbit rabbit = new Rabbit();
+            RabbitTransformer.entityToObject(rabbit, rabbitFromDB);
+            rabbits.add(rabbit);
+        });
         this.map = new GameMap(CommonConst.MAP_CAPACITY);
         InitMechanic.initMap(this.map, this.startArgs);
         InitMechanic.initRabbit(this.map, this.rabbits.get(0));
@@ -50,7 +57,9 @@ public class Game implements Runnable {
         while (!stats.isFinish) {
             //Обработка шагов игры
             tactor.nextTact(); //переходим на следующий шаг
-            rabbits.forEach(rabbit -> rabbit.doTact(this));
+            if (!rabbits.isEmpty()) {
+                rabbits.forEach(rabbit -> rabbit.doTact(this));
+            }
             GrassUp.grassUp(map, tactor);
             try {
                 Thread.sleep(CommonConst.SLEEP_TIME_OUT);

@@ -7,4 +7,6 @@ package game.engine.objects;
  * @author nponosov
  */
 public class GameOptions {
+
+    public GameMap startMap;
 }

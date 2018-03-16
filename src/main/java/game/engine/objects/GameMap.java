@@ -11,6 +11,8 @@ import java.util.Vector;
  */
 public class GameMap {
 
+    private Long id;
+
     public int capacity = 10;
 
     public Vector<Vector<GameMapCell>> rowsOfCells;
@@ -81,5 +83,13 @@ public class GameMap {
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

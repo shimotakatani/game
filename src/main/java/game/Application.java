@@ -1,7 +1,7 @@
 package game;
 
-import game.data.entity.Customer;
 import game.data.repositories.CustomerRepository;
+import game.data.repositories.MapRepository;
 import game.data.repositories.RabbitRepository;
 import game.helper.GameHelper;
 import org.slf4j.Logger;
@@ -26,10 +26,10 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner demo(CustomerRepository repository, RabbitRepository rabbitRepository) {
+    public CommandLineRunner demo(CustomerRepository repository, RabbitRepository rabbitRepository, MapRepository mapRepository) {
         return (args) -> {
-            // save a couple of customers
-            GameHelper.startServer(rabbitRepository);
+
+            GameHelper.startServer(rabbitRepository, mapRepository);
         };
     }
 }

@@ -25,14 +25,42 @@ import java.util.List;
  */
 public class Game implements Runnable {
 
+    /**
+     * Стартовые аргументы
+     */
     public GameOptions startArgs;
+    /**
+     * Изменяемые опции игры (например, завершать ли её следующим тактом
+     */
     public GameStats stats;
+    /**
+     * Класс для доступа к внутреннему времени игры
+     */
     public Tactor tactor;
 
+    /**
+     * Зайцы(раз пока игра соредоточенна только на них
+     */
     public List<Rabbit> rabbits = new ArrayList<>();
+
+    /**
+     * Игровая карта
+     */
     public GameMap map;
+
+    /**
+     * Для спама
+     */
     public Logger logger;
 
+    /**
+     * Конструктор + инициализация игры
+     * Подумать, целесообразно ли вместе держать
+     * @param logger - для спама
+     * @param startArgs - объект для стартовых аргументов(первой карта пошла, потом и константы можно будет перетащить)
+     * @param repository - Репозиторий для вытаскивания зайцев, наверное потом надо буедт какой-то 1 бин для всех репозиториев
+     * @author nponosov
+     */
     public Game(Logger logger, GameOptions startArgs, RabbitRepository repository){
         this.logger = logger;
         this.startArgs = startArgs;
@@ -46,11 +74,21 @@ public class Game implements Runnable {
             RabbitTransformer.entityToObject(rabbit, rabbitFromDB);
             rabbits.add(rabbit);
         });
-        this.map = new GameMap(CommonConst.MAP_CAPACITY);
-        InitMechanic.initMap(this.map, this.startArgs);
-        InitMechanic.initRabbit(this.map, this.rabbits.get(0));
+        if (startArgs.startMap != null) {
+            this.map = startArgs.startMap;
+        } else {
+            this.map = new GameMap(CommonConst.MAP_CAPACITY);
+            InitMechanic.initMap(this.map, this.startArgs);
+        }
+        if (!this.rabbits.isEmpty()) {
+            this.rabbits.forEach(rabbit -> InitMechanic.initRabbit(this.map, rabbit));
+        }
     }
 
+    /**
+     * Основной цикл игры
+     * @author nponosov
+     */
     @Override
     public void run() {
 

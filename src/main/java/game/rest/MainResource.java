@@ -1,5 +1,6 @@
 package game.rest;
 
+import game.data.repositories.MapRepository;
 import game.data.repositories.RabbitRepository;
 import game.engine.SerialisationHelper;
 import game.engine.commands.EndGameCommand;
@@ -25,6 +26,9 @@ public class MainResource {
 
     @Autowired
     private RabbitRepository rabbitRepository;
+
+    @Autowired
+    private MapRepository mapRepository;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MessageDto test(){
@@ -61,13 +65,13 @@ public class MainResource {
 
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     public MessageDto save(){
-        SaveCommand.execute(GameHelper.game, rabbitRepository);
+        SaveCommand.execute(GameHelper.game, rabbitRepository, mapRepository);
         return new MessageDto("Сохранение зайцев успешно завершено", 1);
     }
 
     @RequestMapping(value = "/startServer", method = RequestMethod.GET)
     public MessageDto startServer(){
-        GameHelper.startServer(rabbitRepository);
+        GameHelper.startServer(rabbitRepository, mapRepository);
         return new MessageDto("Игра на сервере запущена", 1);
     }
 

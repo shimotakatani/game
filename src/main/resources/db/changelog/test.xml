@@ -42,4 +42,39 @@
         </sql>
     </changeSet>
 
+    <changeSet id="201803161843" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'map'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу map</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."map" (
+            id BIGINT CONSTRAINT map_id PRIMARY KEY,
+            capacity BIGINT default 0
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="201803161936" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'map_cell'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу map_cell</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."map_cell" (
+            id BIGINT CONSTRAINT map_cell_id PRIMARY KEY,
+            capacity INTEGER default 0,
+            ground INTEGER default 0,
+            eated_at_time BIGINT default 0,
+            x INTEGER,
+            y INTEGER,
+            map_id BIGINT NOT NULL
+            );
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

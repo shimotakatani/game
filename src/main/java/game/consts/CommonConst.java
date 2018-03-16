@@ -30,4 +30,6 @@ public class CommonConst {
     public static final int DISPERS_COUNT_GRASS = 15;
     //Радиус начальных кочек травы
     public static final int RANGE_GRASS = 6;
+    //Интервал сохранения (для начала примерно четверть дня)
+    public static final long SAVE_INTERVAL = 21500L;
 }

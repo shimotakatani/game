@@ -77,4 +77,19 @@
         </sql>
     </changeSet>
 
+    <changeSet id="201803162008" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'game'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу game</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."game" (
+            id BIGINT CONSTRAINT game_id PRIMARY KEY,
+            tacts_from_start BIGINT default 0
+            );
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,7 +1,10 @@
 package game.helper;
 
 import game.consts.CommonConst;
+import game.data.entity.GameEntity;
 import game.data.entity.MapEntity;
+import game.data.repositories.CommonRepository;
+import game.data.repositories.GameRepository;
 import game.data.repositories.MapRepository;
 import game.data.repositories.RabbitRepository;
 import game.data.transformers.MapTransformer;
@@ -25,23 +28,27 @@ public class GameHelper {
 
     public static Game game;
 
-    public static void startServer(RabbitRepository rabbitRepository, MapRepository mapRepository){
+    public static void startServer(CommonRepository commonRepository){
         if (game == null) {
             startArgs = new GameOptions();
             List<MapEntity> mapEntityList = new ArrayList<>();
-            mapRepository.findAll().iterator().forEachRemaining(mapEntityList::add);
+            commonRepository.mapRepository.findAll().iterator().forEachRemaining(mapEntityList::add);
             if (mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).count() == 1) {
                 MapEntity map = mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).findFirst().get();
                 GameMap gameMap = new GameMap(CommonConst.MAP_CAPACITY);
                 MapTransformer.entityToObject(gameMap, map);
                 startArgs.startMap = gameMap;
             }
-            game = new Game(null, startArgs, rabbitRepository);
+            Iterable<GameEntity> gameEntityIterable = commonRepository.gameRepository.findAll();
+            if (gameEntityIterable.iterator().hasNext()){
+                startArgs.startTime = gameEntityIterable.iterator().next().gameTime;
+            }
+            game = new Game(null, startArgs, commonRepository);
             game.run();
         }
     }
 
     public static MessageDto test(){
-        return new MessageDto(SerialisationHelper.getGameSerialization(game,0L), 1);
+        return SerialisationHelper.getGameSerialization(game,0L);
     }
 }

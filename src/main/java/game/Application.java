@@ -1,8 +1,6 @@
 package game;
 
-import game.data.repositories.CustomerRepository;
-import game.data.repositories.MapRepository;
-import game.data.repositories.RabbitRepository;
+import game.data.repositories.*;
 import game.helper.GameHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +24,10 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner demo(CustomerRepository repository, RabbitRepository rabbitRepository, MapRepository mapRepository) {
+    public CommandLineRunner demo(CommonRepository commonRepository) {
         return (args) -> {
 
-            GameHelper.startServer(rabbitRepository, mapRepository);
+            GameHelper.startServer(commonRepository);
         };
     }
 }

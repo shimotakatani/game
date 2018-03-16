@@ -6,6 +6,7 @@ import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
 import game.engine.objects.units.Rabbit;
 import game.engine.objects.units.RabbitComporator;
+import game.rest.dto.MessageDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,10 @@ import java.util.stream.Collectors;
 public class SerialisationHelper {
 
 
-    public static String getGameSerialization(Game game, Long clientId) {
+    public static MessageDto getGameSerialization(Game game, Long clientId) {
+        MessageDto messageDto = new MessageDto();
         List<Rabbit> rabbits =  game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).collect(Collectors.toList());
-        if (rabbits.size() != 1) return "Не был найден заяц для текущего чата";
+        if (rabbits.size() != 1) return new MessageDto("Не был найден заяц для текущего чата", 1L);
         int tempX = rabbits.get(0).x;
         int tempY = rabbits.get(0).y;
         GameMap tempMap = getMapCut(game.map, tempX, tempY);
@@ -34,9 +36,11 @@ public class SerialisationHelper {
         });
         StringBuilder builder = new StringBuilder();
 
-        builder.append(getMapSerialization(tempMap));
+        messageDto.mapString = getMapSerialization(tempMap);
+        messageDto.timeString = "\n Сейчас " + game.tactor.getInnerTime() + " мгновений";
         builder.append(rabbits.get(0).toString());
-        return builder.toString();
+        messageDto.message = builder.toString();
+        return messageDto;
     }
 
     public static String getMapSerialization(GameMap map){

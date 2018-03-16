@@ -40,9 +40,13 @@ public class Rabbit {
 
     public void doTact(Game game){
         if (game.map.getCell(y, x).color == ColorConst.GREEN){
-            eatGrass(game.map.getCell(y, x), game.tactor);
+            synchronized (game){
+                eatGrass(game.map.getCell(y, x), game.tactor);
+            }
         } else {
-            changeDirection(game);
+            synchronized (game){
+                changeDirection(game);
+            }
             goForvard(game.map.capacity);
 
         }

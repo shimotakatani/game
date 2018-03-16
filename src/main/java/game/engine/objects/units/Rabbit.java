@@ -31,22 +31,20 @@ public class Rabbit {
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
-        if (cell.color == ColorConst.GREEN) {
-            cell.color = ColorConst.WHITE;
-            cell.eatedAtTime = tactor.getInnerTime();
-            eatedGrass++;
+        synchronized (cell){
+            if (cell.color == ColorConst.GREEN) {
+                cell.color = ColorConst.WHITE;
+                cell.eatedAtTime = tactor.getInnerTime();
+                eatedGrass++;
+            }
         }
     }
 
     public void doTact(Game game){
         if (game.map.getCell(y, x).color == ColorConst.GREEN){
-            synchronized (game){
-                eatGrass(game.map.getCell(y, x), game.tactor);
-            }
+            eatGrass(game.map.getCell(y, x), game.tactor);
         } else {
-            synchronized (game){
-                changeDirection(game);
-            }
+            changeDirection(game);
             goForvard(game.map.capacity);
 
         }

@@ -14,7 +14,6 @@ public class MapTransformer {
 
     public static void objectToEntity(GameMap object, MapEntity entity){
         if (entity == null) return;
-        entity.setId(object.getId());
         entity.capacity = object.capacity;
         boolean hasCell;
         for (int i = 0; i < object.capacity; i++) {
@@ -41,7 +40,8 @@ public class MapTransformer {
             for (int j = 0; j < object.capacity; j++) {
                 MapCellEntity cellEntity = entity.getMapCellByXY(j, i);
                 if (cellEntity == null) continue;
-                object.getCell(i, j).color = cellEntity.color;
+                object.getCell(i, j).ground = cellEntity.ground;
+                object.getCell(i, j).plant = cellEntity.plant;
                 object.getCell(i, j).eatedAtTime = cellEntity.eatedAtTime;
             }
         }

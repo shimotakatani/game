@@ -1,7 +1,8 @@
 package game.engine.mechanics.Impl;
 
-import game.consts.ColorConst;
 import game.consts.CommonConst;
+import game.consts.GroundTypeConst;
+import game.consts.PlantTypeConst;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameOptions;
 import game.engine.objects.units.Rabbit;
@@ -31,7 +32,7 @@ public class InitMechanic {
         for (int i = 0; i < grassCount; i++) {
             grassX = random.nextInt(map.capacity);
             grassY = random.nextInt(map.capacity);
-            setRangedMapColor(map, grassX, grassY, ColorConst.GREEN, CommonConst.RANGE_GRASS);
+            setRangedMapPlant(map, grassX, grassY, PlantTypeConst.GREEN, CommonConst.RANGE_GRASS);
         }
 
         //Инициализация стен
@@ -45,7 +46,7 @@ public class InitMechanic {
             wallY = random.nextInt(map.capacity);
             wallLength = random.nextInt(CommonConst.WALL_MAX_LENGTH);
             for (int j = 0; j < wallLength; j++) {
-                map.getCell(wallY,wallX).color = ColorConst.WALL;
+                map.getCell(wallY,wallX).ground = GroundTypeConst.WALL;
 
                 if (isVerticalWall) {
                     wallY = Math.min(wallY + 1, map.capacity-1);
@@ -65,7 +66,7 @@ public class InitMechanic {
         do {
             x = random.nextInt(map.capacity);
             y = random.nextInt(map.capacity);
-        } while (map.getCell(y,x).color == ColorConst.WALL);
+        } while (map.getCell(y,x).ground == GroundTypeConst.WALL);
         rabbit.x = x;
         rabbit.y = y;
     }
@@ -75,10 +76,10 @@ public class InitMechanic {
      * @param map - карта в которой затираем
      * @param centerX - номер столбца центра
      * @param centerY - номер строки центра
-     * @param color - цвет
+     * @param plantType - цвет
      * @param range - радиус
      */
-    private static void setRangedMapColor(GameMap map, int centerX, int centerY, int color, int range){
+    private static void setRangedMapPlant(GameMap map, int centerX, int centerY, int plantType, int range){
         int cellX, cellY;
         for (int i = 0; i < range * 2 + 1; i++) {
             for (int j = 0; j < range * 2 + 1; j++) {
@@ -86,7 +87,7 @@ public class InitMechanic {
                 cellY = centerY + i - range;
                 if ((cellX > 0 && cellX < map.capacity) && (cellY > 0 && cellY < map.capacity)){
                     if (range*range > ((i-range) * (i-range) + (j-range) * (j-range))) {
-                        map.getCell(cellY,cellX).color = color;
+                        map.getCell(cellY,cellX).plant = plantType;
                     }
                 }
             }

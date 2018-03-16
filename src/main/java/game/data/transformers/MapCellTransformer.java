@@ -14,7 +14,8 @@ public class MapCellTransformer {
         if (entity == null) return;
         entity.x = object.x;
         entity.y = object.y;
-        entity.color = object.color;
+        entity.ground = object.ground;
+        entity.plant = object.plant;
         entity.eatedAtTime = object.eatedAtTime;
     }
 
@@ -22,7 +23,8 @@ public class MapCellTransformer {
         if (object == null) return;
         object.x = entity.x;
         object.y = entity.y;
-        object.color = entity.color;
+        object.ground = entity.ground;
+        object.plant = entity.plant;
         object.eatedAtTime = entity.eatedAtTime;
     }
 }

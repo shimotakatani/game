@@ -16,7 +16,7 @@ public class MapCellEntity extends AbstractEntity{
     public MapEntity mapEntity;
 
     @Column(name = "ground")
-    public int color;
+    public int ground;
 
     @Column(name = "eated_at_time")
     public long eatedAtTime;
@@ -26,5 +26,8 @@ public class MapCellEntity extends AbstractEntity{
 
     @Column(name = "y")
     public int y = 0;
+
+    @Column(name = "plant")
+    public int plant;
 
 }

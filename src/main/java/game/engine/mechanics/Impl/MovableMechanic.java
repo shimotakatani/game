@@ -44,9 +44,11 @@ public class MovableMechanic {
     }
 
     public static boolean hasAnybodyOnCell(Game game, int x, int y){
-        for (Rabbit rabbit : game.rabbits) {
-            if (rabbit.x == x && rabbit.y == y) return true;
+        synchronized (game.map.getCell(x, y)){
+            for (Rabbit rabbit : game.rabbits) {
+                if (rabbit.x == x && rabbit.y == y) return true;
+            }
+            return false;
         }
-        return false;
     }
 }

@@ -105,7 +105,7 @@ public class Game implements Runnable {
             //Обработка шагов игры
             tactor.nextTact(); //переходим на следующий шаг
             if (!rabbits.isEmpty()) {
-                rabbits.forEach(rabbit -> rabbit.doTact(this));
+                rabbits.parallelStream().forEach(rabbit -> rabbit.doTact(this));
             }
             GrassUp.grassUp(map, tactor);
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {

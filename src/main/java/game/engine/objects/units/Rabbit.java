@@ -32,10 +32,12 @@ public class Rabbit {
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
-        if (cell.plant != PlantTypeConst.NO_PLANT) {
-            cell.plant = PlantTypeConst.NO_PLANT;
-            cell.eatedAtTime = tactor.getInnerTime();
-            eatedGrass++;
+        synchronized (cell){
+            if (cell.plant != PlantTypeConst.NO_PLANT) {
+                cell.plant = PlantTypeConst.NO_PLANT;
+                cell.eatedAtTime = tactor.getInnerTime();
+                eatedGrass++;
+            }
         }
     }
 

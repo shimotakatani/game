@@ -1,11 +1,14 @@
 package game.engine;
 
-import game.consts.ColorConst;
+import game.consts.AnimalTypeConst;
 import game.consts.CommonConst;
+import game.consts.GroundTypeConst;
+import game.consts.PlantTypeConst;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
 import game.engine.objects.units.Rabbit;
 import game.engine.objects.units.RabbitComporator;
+import game.rest.dto.MessageDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +23,26 @@ import java.util.stream.Collectors;
 public class SerialisationHelper {
 
 
-    public static String getGameSerialization(Game game, Long clientId) {
+    public static MessageDto getGameSerialization(Game game, Long clientId) {
+        MessageDto messageDto = new MessageDto();
         List<Rabbit> rabbits =  game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).collect(Collectors.toList());
-        if (rabbits.size() != 1) return "Не был найден заяц для текущего чата";
+        if (rabbits.size() != 1) return new MessageDto("Не был найден заяц для текущего чата", 1L);
         int tempX = rabbits.get(0).x;
         int tempY = rabbits.get(0).y;
         GameMap tempMap = getMapCut(game.map, tempX, tempY);
 
         game.rabbits.forEach(rabbit -> {
             if ((Math.abs(tempX - rabbit.x) <= CommonConst.MAX_RANGE_RABBIT) && (Math.abs(tempY - rabbit.y) <= CommonConst.MAX_RANGE_RABBIT) ) {
-                tempMap.getCell(rabbit.y - tempY + CommonConst.MAX_RANGE_RABBIT, rabbit.x - tempX + CommonConst.MAX_RANGE_RABBIT).setColor(ColorConst.RABBIT);
+                tempMap.getCell(rabbit.y - tempY + CommonConst.MAX_RANGE_RABBIT, rabbit.x - tempX + CommonConst.MAX_RANGE_RABBIT).color = AnimalTypeConst.RABBIT;
             }
         });
         StringBuilder builder = new StringBuilder();
 
-        builder.append(getMapSerialization(tempMap));
+        messageDto.mapString = getMapSerialization(tempMap);
+        messageDto.timeString = "\n Сейчас " + game.tactor.getInnerTime() + " мгновений";
         builder.append(rabbits.get(0).toString());
-        return builder.toString();
+        messageDto.message = builder.toString();
+        return messageDto;
     }
 
     public static String getMapSerialization(GameMap map){
@@ -44,7 +50,11 @@ public class SerialisationHelper {
         for (int i = 0; i < map.capacity; i++){
             Vector<GameMapCell> row = map.getRow(i);
             for (int j = 0; j < map.capacity; j++) {
-                builder.append(row.get(j).color);
+                if (i == CommonConst.MAX_RANGE_RABBIT && j == CommonConst.MAX_RANGE_RABBIT) {  //вставляем зайца
+                    builder.append(AnimalTypeConst.RABBIT);
+                    continue;
+                }
+                builder.append(getColorForSerilization(row.get(j)));
             }
             builder.append("\n");
         }
@@ -72,23 +82,30 @@ public class SerialisationHelper {
                     setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - CommonConst.MAX_RANGE_RABBIT + i - map.capacity));
                     continue;
                 }
-                if (i == CommonConst.MAX_RANGE_RABBIT && j == CommonConst.MAX_RANGE_RABBIT) {  //вставляем зайца
-                    resultMap.getCell(j,i).color = ColorConst.RABBIT;
-                    continue;
-                }
-                resultMap.getCell(j,i).color = map.getCell(centerY - CommonConst.MAX_RANGE_RABBIT + j, centerX - CommonConst.MAX_RANGE_RABBIT + i).color;
-
+                resultMap.getCell(j,i).ground = map.getCell(centerY - CommonConst.MAX_RANGE_RABBIT + j, centerX - CommonConst.MAX_RANGE_RABBIT + i).ground;
+                resultMap.getCell(j,i).plant = map.getCell(centerY - CommonConst.MAX_RANGE_RABBIT + j, centerX - CommonConst.MAX_RANGE_RABBIT + i).plant;
             }
         }
 
         return resultMap;
     }
 
+    //Выбор цвета ячеек по приоритету цветов земли и растений
+    private static int getColorForSerilization(GameMapCell cell){
+        if (cell.color != GroundTypeConst.WHITE) return cell.color;
+        //Самая приоритетная - стена
+        if (cell.ground == GroundTypeConst.WALL) return GroundTypeConst.WALL;
+        //Далее растения на клетке
+        if (cell.plant != PlantTypeConst.NO_PLANT) return cell.plant;
+        //Самая неприоритетная - земля
+        return cell.ground;
+    }
+
     private static void setColorForOutMapCell(GameMapCell cell, int outRange){
         if (outRange == 0) {
-            cell.color = ColorConst.WALL;
+            cell.color = GroundTypeConst.WALL;
         } else {
-            cell.color = ColorConst.GREEN;
+            cell.color = PlantTypeConst.GREEN;
         }
     }
 

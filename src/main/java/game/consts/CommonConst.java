@@ -23,11 +23,13 @@ public class CommonConst {
     //Максимальное время жизни объектов мира в тактах
     public static final long MAX_LENGTH_OF_LIFE = 200000000000L;
     //Зайчья дальность видимости
-    public static final int MAX_RANGE_RABBIT = 9;
+    public static final int MAX_RANGE_RABBIT = 4;
     //Начальное среднее количество кочек травы
     public static final int MIDDLE_COUNT_GRASS = 80;
     //Дисперсия начального среднего количества кочек травы
     public static final int DISPERS_COUNT_GRASS = 15;
     //Радиус начальных кочек травы
     public static final int RANGE_GRASS = 6;
+    //Интервал сохранения (для начала примерно четверть дня)
+    public static final long SAVE_INTERVAL = 21500L;
 }

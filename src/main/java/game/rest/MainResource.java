@@ -1,5 +1,7 @@
 package game.rest;
 
+import game.data.repositories.CommonRepository;
+import game.data.repositories.GameRepository;
 import game.data.repositories.MapRepository;
 import game.data.repositories.RabbitRepository;
 import game.engine.SerialisationHelper;
@@ -30,6 +32,12 @@ public class MainResource {
     @Autowired
     private MapRepository mapRepository;
 
+    @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
+    private CommonRepository commonRepository;
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MessageDto test(){
         return GameHelper.test();
@@ -37,42 +45,42 @@ public class MainResource {
 
     @RequestMapping(value = "/game", method = RequestMethod.GET)
     public MessageDto game(@RequestParam("chatId") Long clientId){
-        return new MessageDto(SerialisationHelper.getGameSerialization(GameHelper.game, clientId), 1);
+        return SerialisationHelper.getGameSerialization(GameHelper.game, clientId);
     }
 
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     public MessageDto start(@RequestParam("chatId") Long clientId){
         StartGameCommand.execute(GameHelper.game, clientId);
-        return new MessageDto(SerialisationHelper.getGameSerialization(GameHelper.game, clientId), 1);
+        return SerialisationHelper.getGameSerialization(GameHelper.game, clientId);
     }
 
     @RequestMapping(value = "/end", method = RequestMethod.GET)
     public MessageDto end(@RequestParam("chatId") Long clientId){
         EndGameCommand.execute(GameHelper.game, clientId);
-        return new MessageDto(SerialisationHelper.getGameSerialization(GameHelper.game, clientId), 1);
+        return SerialisationHelper.getGameSerialization(GameHelper.game, clientId);
     }
 
     @RequestMapping(value = "/name", method = RequestMethod.GET)
     public MessageDto name(@RequestParam("chatId") Long clientId, @RequestParam("name") String name){
         NameCommand.execute(GameHelper.game, clientId, name);
-        return new MessageDto(SerialisationHelper.getRabbitSerilization(GameHelper.game, clientId), 1);
+        return new MessageDto(SerialisationHelper.getRabbitSerilization(GameHelper.game, clientId), 1L);
     }
 
     @RequestMapping(value = "/score", method = RequestMethod.GET)
     public MessageDto score(@RequestParam("chatId") Long clientId){
-        return new MessageDto(SerialisationHelper.getGeneralScoreSerilization(GameHelper.game, clientId), 1);
+        return new MessageDto(SerialisationHelper.getGeneralScoreSerilization(GameHelper.game, clientId), 1L);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.GET)
     public MessageDto save(){
-        SaveCommand.execute(GameHelper.game, rabbitRepository, mapRepository);
-        return new MessageDto("Сохранение зайцев успешно завершено", 1);
+        SaveCommand.execute(GameHelper.game, commonRepository);
+        return new MessageDto("Сохранение зайцев успешно завершено", 1L);
     }
 
     @RequestMapping(value = "/startServer", method = RequestMethod.GET)
     public MessageDto startServer(){
-        GameHelper.startServer(rabbitRepository, mapRepository);
-        return new MessageDto("Игра на сервере запущена", 1);
+        GameHelper.startServer(commonRepository);
+        return new MessageDto("Игра на сервере запущена", 1L);
     }
 
 

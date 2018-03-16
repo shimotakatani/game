@@ -9,4 +9,6 @@ package game.engine.objects;
 public class GameOptions {
 
     public GameMap startMap;
+
+    public Long startTime = 0L;
 }

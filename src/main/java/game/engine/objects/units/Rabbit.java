@@ -1,7 +1,8 @@
 package game.engine.objects.units;
 
-import game.consts.ColorConst;
 import game.consts.DirectionConst;
+import game.consts.GroundTypeConst;
+import game.consts.PlantTypeConst;
 import game.engine.Game;
 import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMapCell;
@@ -13,7 +14,7 @@ import java.util.Random;
 /**
  * create time 26.02.2018
  *
- * Класс кролика, который ест траву
+ * Класс зайца, который ест траву
  * @author nponosov
  */
 public class Rabbit {
@@ -32,8 +33,8 @@ public class Rabbit {
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
         synchronized (cell){
-            if (cell.color == ColorConst.GREEN) {
-                cell.color = ColorConst.WHITE;
+            if (cell.plant != PlantTypeConst.NO_PLANT) {
+                cell.plant = PlantTypeConst.NO_PLANT;
                 cell.eatedAtTime = tactor.getInnerTime();
                 eatedGrass++;
             }
@@ -41,7 +42,7 @@ public class Rabbit {
     }
 
     public void doTact(Game game){
-        if (game.map.getCell(y, x).color == ColorConst.GREEN){
+        if (game.map.getCell(y, x).plant != PlantTypeConst.NO_PLANT){
             eatGrass(game.map.getCell(y, x), game.tactor);
         } else {
             changeDirection(game);
@@ -72,7 +73,7 @@ public class Rabbit {
             if (y == 0) return false;
         }
         GameMapCell cell = MovableMechanic.getMapCellByDirection(game.map, direction, x, y);
-        if (cell.color == ColorConst.WALL) return false;
+        if (cell.ground == GroundTypeConst.WALL) return false;
         if (MovableMechanic.hasAnybodyOnCell(game, cell.x, cell.y)) return false;
 
         //возможно будут ещё условия
@@ -125,7 +126,7 @@ public class Rabbit {
                 cell = MovableMechanic.getMapCellByDirection(game.map, i, x, y);
                 if (MovableMechanic.hasAnybodyOnCell(game, cell.x, cell.y)) break;
 
-                if (cell.color == ColorConst.GREEN){
+                if (cell.plant != PlantTypeConst.NO_PLANT){
                     return i;
                 }
             }

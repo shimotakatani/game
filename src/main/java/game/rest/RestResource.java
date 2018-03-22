@@ -143,4 +143,22 @@ public class RestResource {
         MapTransformer.objectToDto(mapCut, mapDto);
         return mapDto;
     }
+
+    @RequestMapping(value = "/rest/rabbit/list", method = RequestMethod.GET)
+    public List<RabbitDto> getRabbitList(){
+
+        List<RabbitDto> rabbitDtoList = new ArrayList<>();
+        for (Rabbit rabbit : GameHelper.game.rabbits) {
+            RabbitDto rabbitDto = new RabbitDto();
+            RabbitTransformer.objectToDto(rabbit, rabbitDto);
+            rabbitDtoList.add(rabbitDto);
+        }
+
+        return rabbitDtoList;
+    }
+
+    @RequestMapping(value = "/rest/now", method = RequestMethod.GET)
+    public Long getInnerTime(){
+        return GameHelper.game.tactor.getInnerTime();
+    }
 }

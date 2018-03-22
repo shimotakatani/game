@@ -61,7 +61,7 @@ public class SerialisationHelper {
         return builder.toString();
     }
 
-    private static GameMap getMapCut(GameMap map, int centerX, int centerY){
+    public static GameMap getMapCut(GameMap map, int centerX, int centerY){
         GameMap resultMap = new GameMap(CommonConst.MAX_RANGE_RABBIT * 2 + 1);
 
         for (int i = 0; i < resultMap.capacity; i++) {

@@ -4,6 +4,8 @@ import game.data.entity.MapCellEntity;
 import game.data.entity.MapEntity;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
+import game.rest.dto.MapCellDto;
+import game.rest.dto.MapDto;
 
 /**
  * create time 16.03.2018
@@ -43,6 +45,18 @@ public class MapTransformer {
                 object.getCell(i, j).ground = cellEntity.ground;
                 object.getCell(i, j).plant = cellEntity.plant;
                 object.getCell(i, j).eatedAtTime = cellEntity.eatedAtTime;
+            }
+        }
+    }
+
+    public static void objectToDto(GameMap object, MapDto dto){
+        if (dto == null) return;
+        dto.capacity = object.capacity;
+        for (int i = 0; i < object.capacity; i++) {
+            for (int j = 0; j < object.capacity; j++) {
+                MapCellDto cellDto = new MapCellDto();
+                MapCellTransformer.objectToDto(object.getCell(i, j), cellDto);
+                dto.cells.add(cellDto);
             }
         }
     }

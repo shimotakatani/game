@@ -11,10 +11,7 @@ import game.engine.commands.SaveCommand;
 import game.engine.commands.StartGameCommand;
 import game.helper.GameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import game.rest.dto.MessageDto;
 
 
@@ -24,7 +21,8 @@ import game.rest.dto.MessageDto;
  * @author nponosov
  */
 @RestController
-public class MainResource {
+@CrossOrigin
+public class BotResource {
 
     @Autowired
     private RabbitRepository rabbitRepository;

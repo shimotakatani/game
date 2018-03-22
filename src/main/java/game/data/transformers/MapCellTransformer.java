@@ -2,6 +2,7 @@ package game.data.transformers;
 
 import game.data.entity.MapCellEntity;
 import game.engine.objects.GameMapCell;
+import game.rest.dto.MapCellDto;
 
 /**
  * create time 16.03.2018
@@ -26,5 +27,14 @@ public class MapCellTransformer {
         object.ground = entity.ground;
         object.plant = entity.plant;
         object.eatedAtTime = entity.eatedAtTime;
+    }
+
+    public static void objectToDto(GameMapCell object, MapCellDto dto){
+        if (dto == null) return;
+        dto.x = object.x;
+        dto.y = object.y;
+        dto.ground = object.ground;
+        dto.plant = object.plant;
+        dto.eatedAtTime = object.eatedAtTime;
     }
 }

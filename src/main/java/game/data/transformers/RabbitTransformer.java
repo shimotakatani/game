@@ -2,6 +2,7 @@ package game.data.transformers;
 
 import game.data.entity.RabbitEntity;
 import game.engine.objects.units.Rabbit;
+import game.rest.dto.RabbitDto;
 
 /**
  * Трансформер для сущности зайца в объект заяц
@@ -29,5 +30,15 @@ public class RabbitTransformer {
         object.y = entity.y;
         object.eatedGrass = entity.eatedGrass;
         object.name = entity.name;
+    }
+
+    public static void objectToDto(Rabbit object, RabbitDto dto){
+        if (dto == null) return;
+        dto.clientId = object.clientId;
+        dto.direction = object.direction;
+        dto.x = object.x;
+        dto.y = object.y;
+        dto.eatedGrass = object.eatedGrass;
+        dto.name = object.name;
     }
 }

@@ -29,7 +29,7 @@ public class SerialisationHelper {
         if (rabbits.size() != 1) return new MessageDto("Не был найден заяц для текущего чата", 1L);
         int tempX = rabbits.get(0).x;
         int tempY = rabbits.get(0).y;
-        GameMap tempMap = getMapCut(game.map, tempX, tempY);
+        GameMap tempMap = getMapCut(game.map, tempX, tempY, CommonConst.MAX_RANGE_RABBIT);
 
         game.rabbits.forEach(rabbit -> {
             if ((Math.abs(tempX - rabbit.x) <= CommonConst.MAX_RANGE_RABBIT) && (Math.abs(tempY - rabbit.y) <= CommonConst.MAX_RANGE_RABBIT) ) {
@@ -61,29 +61,29 @@ public class SerialisationHelper {
         return builder.toString();
     }
 
-    public static GameMap getMapCut(GameMap map, int centerX, int centerY){
-        GameMap resultMap = new GameMap(CommonConst.MAX_RANGE_RABBIT * 2 + 1);
+    public static GameMap getMapCut(GameMap map, int centerX, int centerY, int radius){
+        GameMap resultMap = new GameMap(radius * 2 + 1);
 
         for (int i = 0; i < resultMap.capacity; i++) {
             for (int j = 0; j < resultMap.capacity; j++) {
-                if (centerY - CommonConst.MAX_RANGE_RABBIT + j < 0) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - CommonConst.MAX_RANGE_RABBIT + j + 1));
+                if (centerY - radius + j < 0) { //отрезаем края
+                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - radius + j + 1));
                     continue;
                 }
-                if (centerY - CommonConst.MAX_RANGE_RABBIT + j > map.capacity -1) {  //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - CommonConst.MAX_RANGE_RABBIT + j - map.capacity));
+                if (centerY - radius + j > map.capacity -1) {  //отрезаем края
+                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - radius + j - map.capacity));
                     continue;
                 }
-                if (centerX - CommonConst.MAX_RANGE_RABBIT + i < 0) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - CommonConst.MAX_RANGE_RABBIT + i + 1));
+                if (centerX - radius + i < 0) { //отрезаем края
+                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - radius + i + 1));
                     continue;
                 }
-                if (centerX - CommonConst.MAX_RANGE_RABBIT + i > map.capacity -1) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - CommonConst.MAX_RANGE_RABBIT + i - map.capacity));
+                if (centerX - radius + i > map.capacity -1) { //отрезаем края
+                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - radius + i - map.capacity));
                     continue;
                 }
-                resultMap.getCell(j,i).ground = map.getCell(centerY - CommonConst.MAX_RANGE_RABBIT + j, centerX - CommonConst.MAX_RANGE_RABBIT + i).ground;
-                resultMap.getCell(j,i).plant = map.getCell(centerY - CommonConst.MAX_RANGE_RABBIT + j, centerX - CommonConst.MAX_RANGE_RABBIT + i).plant;
+                resultMap.getCell(j,i).ground = map.getCell(centerY - radius + j, centerX - radius + i).ground;
+                resultMap.getCell(j,i).plant = map.getCell(centerY - radius + j, centerX - radius + i).plant;
             }
         }
 

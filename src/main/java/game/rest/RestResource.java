@@ -1,5 +1,6 @@
 package game.rest;
 
+import game.consts.CommonConst;
 import game.data.repositories.CommonRepository;
 import game.data.transformers.MapTransformer;
 import game.data.transformers.RabbitTransformer;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static game.consts.CommonConst.MAX_MAP_RADIUS_TO_SEND_BY_REST;
 
 /**
  * create time 20.03.2018
@@ -44,7 +47,7 @@ public class RestResource {
         if (rabbits.size() != 1) return dto;
         int tempX = rabbits.get(0).x;
         int tempY = rabbits.get(0).y;
-        GameMap tempMap = SerialisationHelper.getMapCut(GameHelper.game.map, tempX, tempY);
+        GameMap tempMap = SerialisationHelper.getMapCut(GameHelper.game.map, tempX, tempY, CommonConst.MAX_RANGE_RABBIT);
 
         GameDto gameDto = new GameDto();
         gameDto.innerTime = GameHelper.game.tactor.getInnerTime();
@@ -123,5 +126,21 @@ public class RestResource {
         dto.rabbitDtoList = rabbitDtoList;
 
         return dto;
+    }
+
+    @RequestMapping(value = "/rest/mapCut", method = RequestMethod.POST)
+    public MapDto getMapCut(@RequestBody MapRequestDto requestDto){
+
+        MapDto mapDto = new MapDto();
+
+        if (GameHelper.game == null) return mapDto;
+        if (requestDto == null) return mapDto;
+        if (requestDto.centerX < 0 || requestDto.centerX >= GameHelper.game.map.capacity) return mapDto;
+        if (requestDto.centerY < 0 || requestDto.centerY >= GameHelper.game.map.capacity) return mapDto;
+        if (requestDto.radius < 0) return mapDto;
+
+        GameMap mapCut = SerialisationHelper.getMapCut(GameHelper.game.map, requestDto.centerX, requestDto.centerY, Math.min(requestDto.radius, MAX_MAP_RADIUS_TO_SEND_BY_REST));
+        MapTransformer.objectToDto(mapCut, mapDto);
+        return mapDto;
     }
 }

@@ -32,4 +32,6 @@ public class CommonConst {
     public static final int RANGE_GRASS = 6;
     //Интервал сохранения (для начала примерно четверть дня)
     public static final long SAVE_INTERVAL = 21500L;
+    //Максимальный радиус карты для отправки по рест
+    public static final int MAX_MAP_RADIUS_TO_SEND_BY_REST = 25;
 }

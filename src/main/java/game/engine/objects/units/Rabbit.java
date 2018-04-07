@@ -17,18 +17,19 @@ import java.util.Random;
  * Класс зайца, который ест траву
  * @author nponosov
  */
-public class Rabbit {
+public class Rabbit extends GenericUnit{
 
     Random random = new Random();
 
     public int eatedGrass = 0;
     public int x = 0;
     public int y = 0;
-    public int previousX = 0;
-    public int previousY = 0;
+    private int previousX = 0;
+    private int previousY = 0;
     public int direction = DirectionConst.E;
     public Long clientId = 0L;
     public String name = "";
+
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
@@ -42,8 +43,8 @@ public class Rabbit {
     }
 
     public void doTact(Game game){
-        if (game.map.getCell(y, x).plant != PlantTypeConst.NO_PLANT){
-            eatGrass(game.map.getCell(y, x), game.tactor);
+        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
+            eatGrass(game.map.getCell(x, y), game.tactor);
         } else {
             changeDirection(game);
             goForvard(game.map.capacity);
@@ -147,5 +148,61 @@ public class Rabbit {
     public void setY(int y){
         this.previousY = this.y;
         this.y = y;
+    }
+
+    public int getEatedGrass() {
+        return eatedGrass;
+    }
+
+    public void setEatedGrass(int eatedGrass) {
+        this.eatedGrass = eatedGrass;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getPreviousX() {
+        return previousX;
+    }
+
+    public void setPreviousX(int previousX) {
+        this.previousX = previousX;
+    }
+
+    public int getPreviousY() {
+        return previousY;
+    }
+
+    public void setPreviousY(int previousY) {
+        this.previousY = previousY;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

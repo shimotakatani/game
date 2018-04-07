@@ -4,7 +4,11 @@ import game.consts.DirectionConst;
 import game.engine.Game;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
+import game.engine.objects.MapCellForPath;
 import game.engine.objects.units.Rabbit;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * create time 06.03.2018
@@ -40,7 +44,7 @@ public class MovableMechanic {
                 break;
             }
         }
-        return map.getCell(y,x);
+        return map.getCell(x,y);
     }
 
     public static boolean hasAnybodyOnCell(Game game, int x, int y){
@@ -50,5 +54,97 @@ public class MovableMechanic {
             }
             return false;
         }
+    }
+
+    public static List<GameMapCell> getNeighbors(GameMap map, int centerX, int centerY){
+
+        List<GameMapCell> neighbors = new ArrayList<>();
+
+        GameMapCell cell;
+        for(int i = -1; i <= 1; i++){
+            for (int j = -1; j <= 1 ; j++) {
+                cell = map.getExistedCell(centerX + i, centerY + j);
+                if (!neighbors.contains(cell)) neighbors.add(cell);
+            }
+        }
+
+        return neighbors;
+    }
+
+    /**
+     * Поиск в ширину
+     * @param map - карта на которой ищем, например зайцы будут искать на маленькой вырезке(19х19 по дефолту)
+     * @param startX - x начальной точки
+     * @param startY - y начальной точки
+     * @param endX - х конечной точки
+     * @param endY - y конечной точки
+     * @return Последовательность клеток, которые надо посетить для достижение конечной точки
+     */
+    public static List<MapCellForPath> findPathWidth(GameMap map, int startX, int startY, int endX, int endY){
+
+        List<MapCellForPath> path = new ArrayList<>();
+
+        List<MapCellForPath> visited = new ArrayList<>();
+        Queue<MapCellForPath> queue = new LinkedList<MapCellForPath>();
+
+        MapCellForPath start = new MapCellForPath(map.getExistedCell(startX, startY));
+
+        queue.add(start);
+        visited.add(start);
+        start.setPreviousX(start.getX());
+        start.setPreviousY(start.getY());
+
+        MapCellForPath currentCell = start;
+
+        while ( ! queue.isEmpty()) {
+            currentCell = queue.poll();
+
+            if (currentCell.getX() == endX && currentCell.getY() == endY) break;
+
+            for (GameMapCell gameMapCell : getNeighbors(map, currentCell.getX(), currentCell.getY())) {
+                if ( ! ((gameMapCell.getX() == currentCell.getPreviousX()) && (gameMapCell.getY() == currentCell.getPreviousY()))) {
+                    MapCellForPath next = new MapCellForPath(gameMapCell);
+                    next.setPreviousX(currentCell.getX());
+                    next.setPreviousY(currentCell.getY());
+                    queue.add(next);
+                    visited.add(next);
+                }
+            }
+        }
+
+        if (!(currentCell.getX() == endX && currentCell.getY() == endY)) return Collections.EMPTY_LIST;
+
+        path.add(currentCell);
+        int previousX, previousY;
+        while (currentCell.getX() != startX && currentCell.getY() != startY) {
+            previousX = currentCell.getPreviousX();
+            previousY = currentCell.getPreviousY();
+            currentCell = visited.stream().filter(item -> item.getX() == previousX && item.getY() == previousY).findFirst().get();
+            if (currentCell == null) break;
+            path.add(currentCell);
+        }
+        Collections.reverse(path);
+
+        return path;
+    }
+
+    public static List<GameMapCell> findPathDeixtra(GameMap map, int startX, int startY, int endX, int endY){
+        List<GameMapCell> findedPath = new ArrayList<>();
+
+        List<MapCellForPath> path = new ArrayList<>();
+
+
+
+        return findedPath;
+    }
+
+    public static List<GameMapCell> findPathAStar(GameMap map, int startX, int startY, int endX, int endY){
+        List<GameMapCell> findedPath = new ArrayList<>();
+
+        List<MapCellForPath> path = new ArrayList<>();
+
+
+
+        return findedPath;
     }
 }

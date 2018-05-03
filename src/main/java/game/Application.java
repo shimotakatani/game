@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * create time 14.03.2018
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Bean;
  * @author nponosov
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);

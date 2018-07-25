@@ -103,9 +103,9 @@ public class SerialisationHelper {
 
     private static void setColorForOutMapCell(GameMapCell cell, int outRange){
         if (outRange == 0) {
-            cell.color = GroundTypeConst.WALL;
+            cell.ground = GroundTypeConst.WALL;
         } else {
-            cell.color = PlantTypeConst.GREEN;
+            cell.plant = PlantTypeConst.GREEN;
         }
     }
 

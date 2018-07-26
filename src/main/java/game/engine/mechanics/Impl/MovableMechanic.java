@@ -2,6 +2,7 @@ package game.engine.mechanics.Impl;
 
 import game.consts.DirectionConst;
 import game.consts.GroundTypeConst;
+import game.consts.PlantTypeConst;
 import game.engine.Game;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
@@ -72,6 +73,64 @@ public class MovableMechanic {
         }
 
         return neighbors;
+    }
+
+    public static GameMapCell getNearestAnyPlant(GameMap map, int centerX, int centerY, int range){
+        int i =0;
+        GameMapCell findedCell = null;
+        if (range > 0) {
+
+            while (findedCell == null && i < range){
+                i++;
+                GameMapCell currentCell = null;
+                List<GameMapCell> rangedCells = new ArrayList<>();
+                for (int j = -i; j <= i; j++) {
+                    for (int k = -i; k <= i; k++) {
+                        if (j != 0 || k != 0) {
+                            currentCell = map.getCell(centerX + j, centerY + k);
+                            if (currentCell.plant != PlantTypeConst.NO_PLANT) {
+                                rangedCells.add(currentCell);
+                            }
+                        }
+                    }
+                }
+                if (!rangedCells.isEmpty()){
+                    Random random = new Random(rangedCells.size());
+                    findedCell = rangedCells.get(random.nextInt());
+                }
+            }
+
+        }
+        return findedCell;
+    }
+
+    public static int getDirectionByTwoCells(int startX, int startY, int endX, int endY){
+        if (Math.abs(startX - endX) > 1 || Math.abs(startY- endY) > 1) return DirectionConst.UNKNOWN_DIRECTION;
+        if (startX - endX == 1) {
+            if (startY - endY == 1) {
+                return DirectionConst.NW;
+            } else if (startY - endY == -1) {
+                return DirectionConst.SW;
+            } else { // ==0
+                return DirectionConst.W;
+            }
+        } else if (startX - endX == -1) {
+            if (startY - endY == 1) {
+                return DirectionConst.NE;
+            } else if (startY - endY == -1) {
+                return DirectionConst.SE;
+            } else { // ==0
+                return DirectionConst.E;
+            }
+        } else { // ==0
+            if (startY - endY == 1) {
+                return DirectionConst.N;
+            } else if (startY - endY == -1) {
+                return DirectionConst.S;
+            } else { // ==0
+                return DirectionConst.UNKNOWN_DIRECTION;
+            }
+        }
     }
 
     private static boolean hasVisited(List<MapCellForPath> visited, int x, int y){

@@ -108,4 +108,20 @@
         </sql>
     </changeSet>
 
+    <changeSet id="201807261600" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'rabbit'
+            </sqlCheck>
+            <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                where table_schema='public' and table_name = 'rabbit' and column_name = 'tacticId'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем поле plant в таблицу map_cell</comment>
+        <sql>
+            ALTER TABLE IF EXISTS "public"."rabbit"
+            ADD COLUMN IF NOT EXISTS tacticId INTEGER default 0;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

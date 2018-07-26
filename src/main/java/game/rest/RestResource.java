@@ -5,10 +5,7 @@ import game.data.repositories.CommonRepository;
 import game.data.transformers.MapTransformer;
 import game.data.transformers.RabbitTransformer;
 import game.engine.SerialisationHelper;
-import game.engine.commands.EndGameCommand;
-import game.engine.commands.NameCommand;
-import game.engine.commands.SaveCommand;
-import game.engine.commands.StartGameCommand;
+import game.engine.commands.*;
 import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMap;
 import game.engine.objects.MapCellForPath;
@@ -171,5 +168,11 @@ public class RestResource {
         path.forEach(mapCellForPath -> pathBuilder.append(mapCellForPath.x + ", " + mapCellForPath.y + " -> "));
         pathBuilder.append("end");
         return new MessageDto(pathBuilder.toString(), 0L);
+    }
+
+    @RequestMapping(value = "/rest/setTactic", method = RequestMethod.GET)
+    public MessageDto setTactic(@RequestParam("chatId") Long clientId, @RequestParam("tacticId") int tacticId){
+        TacticCommand.execute(GameHelper.game, clientId, tacticId);
+        return new MessageDto("Тактика успешно изменена на тактику с номером " + tacticId, clientId);
     }
 }

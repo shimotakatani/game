@@ -34,4 +34,6 @@ public class CommonConst {
     public static final long SAVE_INTERVAL = 21500L;
     //Максимальный радиус карты для отправки по рест
     public static final int MAX_MAP_RADIUS_TO_SEND_BY_REST = 25;
+    //Максимальный радиус зайца
+    public static final int DEFAULT_RABBIT_MAX_RANGE = 5;
 }

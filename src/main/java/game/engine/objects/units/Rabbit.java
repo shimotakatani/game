@@ -1,14 +1,14 @@
 package game.engine.objects.units;
 
-import game.consts.DirectionConst;
-import game.consts.GroundTypeConst;
-import game.consts.PlantTypeConst;
+import game.consts.*;
 import game.engine.Game;
 import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMapCell;
+import game.engine.objects.MapCellForPath;
 import game.engine.tactor.Tactor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,6 +29,7 @@ public class Rabbit extends GenericUnit{
     public int direction = DirectionConst.E;
     public Long clientId = 0L;
     public String name = "";
+    public int tacticId = TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT;
 
 
 
@@ -43,6 +44,21 @@ public class Rabbit extends GenericUnit{
     }
 
     public void doTact(Game game){
+        switch (this.tacticId) {
+            case TacticTypeConst.RABBIT_RANGED_RANDOM_EAT:
+                doRangedRandomEatTactic(game);
+                break;
+            case TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT:
+                doOneRangeRandomEatTactic(game);
+                break;
+            default:
+                doOneRangeRandomEatTactic(game);
+                break;
+        }
+
+    }
+
+    private void doOneRangeRandomEatTactic(Game game){
         if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
             eatGrass(game.map.getCell(x, y), game.tactor);
         } else {
@@ -50,6 +66,28 @@ public class Rabbit extends GenericUnit{
             goForvard(game.map.capacity);
 
         }
+    }
+
+    private void doRangedRandomEatTactic(Game game){
+        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
+            eatGrass(game.map.getCell(x, y), game.tactor);
+        } else {
+            GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, this.x, this.y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
+            if (nearestPlantCell != null) {
+                List<MapCellForPath> path = MovableMechanic.findPathWidth(game.map, x, y, nearestPlantCell.x, nearestPlantCell.y);
+                if (!path.isEmpty()) {
+                    int maybeDirection = MovableMechanic.getDirectionByTwoCells(x, y, path.get(0).x, path.get(0).y);
+                    if (maybeDirection > 0 && maybeDirection < 9){
+                        direction = maybeDirection;
+                        goForvard(game.map.capacity);
+                        return;
+                        //в самом конце верного пути надо return
+                    }
+                }
+            }
+        }
+        //default: то есть в случае любого косяка основного метода
+        doOneRangeRandomEatTactic(game);
     }
 
     private void changeDirection(Game game){

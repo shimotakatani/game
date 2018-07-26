@@ -17,4 +17,5 @@ public class DirectionConst {
     public static final int SE = 7; // south-east
 
     public static final int DIRECTION_SIZE = 8; //количество направлений
+    public static final int UNKNOWN_DIRECTION = -1; //количество направлений
 }

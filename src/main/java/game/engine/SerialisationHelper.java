@@ -33,7 +33,7 @@ public class SerialisationHelper {
 
         game.rabbits.forEach(rabbit -> {
             if ((Math.abs(tempX - rabbit.x) <= CommonConst.MAX_RANGE_RABBIT) && (Math.abs(tempY - rabbit.y) <= CommonConst.MAX_RANGE_RABBIT) ) {
-                tempMap.getCell(rabbit.y - tempY + CommonConst.MAX_RANGE_RABBIT, rabbit.x - tempX + CommonConst.MAX_RANGE_RABBIT).color = AnimalTypeConst.RABBIT;
+                tempMap.getCell( rabbit.x - tempX + CommonConst.MAX_RANGE_RABBIT, rabbit.y - tempY + CommonConst.MAX_RANGE_RABBIT).color = AnimalTypeConst.RABBIT;
             }
         });
         StringBuilder builder = new StringBuilder();
@@ -67,23 +67,23 @@ public class SerialisationHelper {
         for (int i = 0; i < resultMap.capacity; i++) {
             for (int j = 0; j < resultMap.capacity; j++) {
                 if (centerY - radius + j < 0) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - radius + j + 1));
+                    setColorForOutMapCell(resultMap.getCell(i,j),Math.abs(centerY - radius + j + 1));
                     continue;
                 }
                 if (centerY - radius + j > map.capacity -1) {  //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerY - radius + j - map.capacity));
+                    setColorForOutMapCell(resultMap.getCell(i,j),Math.abs(centerY - radius + j - map.capacity));
                     continue;
                 }
                 if (centerX - radius + i < 0) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - radius + i + 1));
+                    setColorForOutMapCell(resultMap.getCell(i,j),Math.abs(centerX - radius + i + 1));
                     continue;
                 }
                 if (centerX - radius + i > map.capacity -1) { //отрезаем края
-                    setColorForOutMapCell(resultMap.getCell(j,i),Math.abs(centerX - radius + i - map.capacity));
+                    setColorForOutMapCell(resultMap.getCell(i,j),Math.abs(centerX - radius + i - map.capacity));
                     continue;
                 }
-                resultMap.getCell(j,i).ground = map.getCell(centerY - radius + j, centerX - radius + i).ground;
-                resultMap.getCell(j,i).plant = map.getCell(centerY - radius + j, centerX - radius + i).plant;
+                resultMap.getCell(i,j).ground = map.getCell(centerX - radius + i, centerY - radius + j).ground;
+                resultMap.getCell(i,j).plant = map.getCell(centerX - radius + i, centerY - radius + j).plant;
             }
         }
 

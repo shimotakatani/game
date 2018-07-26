@@ -65,13 +65,33 @@ public class GameMap {
 
     /**
      * Получить ячейку по координатам
-     * @param i - номер строки
-     * @param j - номер столбца
+     * @param i - номер столбца
+     * @param j - номер строки
      * @return ячейка
      * @author nponosov
      */
     public GameMapCell getCell(int i, int j){
-        return getRow(i).get(j);
+        return getRow(j).get(i);
+    }
+
+    /**
+     * Получить ячейку по координатам
+     * @param i - номер столбца
+     * @param j - номер строки
+     * @return ячейка
+     * @author nponosov
+     */
+    public GameMapCell getExistedCell(int i, int j){
+        int x,y;
+        x = i;
+        y = j;
+
+        if (i < 0) x = 0;
+        if (j < 0) y = 0;
+        if (i >= this.capacity) x= this.capacity - 1;
+        if (j >= this.capacity) y= this.capacity - 1;
+
+        return getCell(x, y);
     }
 
     public synchronized String getMapSerilization(){

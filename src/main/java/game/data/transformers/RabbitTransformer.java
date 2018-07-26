@@ -20,6 +20,7 @@ public class RabbitTransformer {
         entity.y = object.y;
         entity.eatedGrass = object.eatedGrass;
         entity.name = object.name;
+        entity.tacticId = object.tacticId;
     }
 
     public static void entityToObject(Rabbit object, RabbitEntity entity){
@@ -30,6 +31,7 @@ public class RabbitTransformer {
         object.y = entity.y;
         object.eatedGrass = entity.eatedGrass;
         object.name = entity.name;
+        object.tacticId = entity.tacticId;
     }
 
     public static void objectToDto(Rabbit object, RabbitDto dto){
@@ -40,5 +42,6 @@ public class RabbitTransformer {
         dto.y = object.y;
         dto.eatedGrass = object.eatedGrass;
         dto.name = object.name;
+        dto.tacticId = object.tacticId;
     }
 }

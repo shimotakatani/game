@@ -46,7 +46,7 @@ public class InitMechanic {
             wallY = random.nextInt(map.capacity);
             wallLength = random.nextInt(CommonConst.WALL_MAX_LENGTH);
             for (int j = 0; j < wallLength; j++) {
-                map.getCell(wallY,wallX).ground = GroundTypeConst.WALL;
+                map.getCell(wallX,wallY).ground = GroundTypeConst.WALL;
 
                 if (isVerticalWall) {
                     wallY = Math.min(wallY + 1, map.capacity-1);
@@ -66,7 +66,7 @@ public class InitMechanic {
         do {
             x = random.nextInt(map.capacity);
             y = random.nextInt(map.capacity);
-        } while (map.getCell(y,x).ground == GroundTypeConst.WALL);
+        } while (map.getCell(x,y).ground == GroundTypeConst.WALL);
         rabbit.x = x;
         rabbit.y = y;
     }
@@ -87,7 +87,7 @@ public class InitMechanic {
                 cellY = centerY + i - range;
                 if ((cellX > 0 && cellX < map.capacity) && (cellY > 0 && cellY < map.capacity)){
                     if (range*range > ((i-range) * (i-range) + (j-range) * (j-range))) {
-                        map.getCell(cellY,cellX).plant = plantType;
+                        map.getCell(cellX,cellY).plant = plantType;
                     }
                 }
             }

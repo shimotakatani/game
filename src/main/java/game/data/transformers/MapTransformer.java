@@ -20,7 +20,7 @@ public class MapTransformer {
         boolean hasCell;
         for (int i = 0; i < object.capacity; i++) {
             for (int j = 0; j < object.capacity; j++) {
-                MapCellEntity cellEntity = entity.getMapCellByXY(j, i);
+                MapCellEntity cellEntity = entity.getMapCellByXY(i, j);
                 if (cellEntity == null) {
                     cellEntity = new MapCellEntity();
                     hasCell = false;
@@ -40,7 +40,7 @@ public class MapTransformer {
         object.setId(entity.getId());
         for (int i = 0; i < object.capacity; i++) {
             for (int j = 0; j < object.capacity; j++) {
-                MapCellEntity cellEntity = entity.getMapCellByXY(j, i);
+                MapCellEntity cellEntity = entity.getMapCellByXY(i, j);
                 if (cellEntity == null) continue;
                 object.getCell(i, j).ground = cellEntity.ground;
                 object.getCell(i, j).plant = cellEntity.plant;

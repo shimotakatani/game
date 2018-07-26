@@ -21,28 +21,28 @@ public class MovableMechanic {
 
     public static GameMapCell getMapCellByDirection(GameMap map, int direction, int x, int y){
         switch (direction){
-            case DirectionConst.E: x = Math.min(map.capacity-1, x+1); break;
+            case DirectionConst.E: y = Math.min(map.capacity-1, y+1); break;
             case DirectionConst.NE: {
-                x = Math.min(map.capacity-1, x+1);
-                y = Math.max(0, y-1);
+                y = Math.min(map.capacity-1, y+1);
+                x = Math.max(0, x-1);
                 break;
             }
-            case DirectionConst.N: y = Math.max(0, y-1); break;
+            case DirectionConst.N: x = Math.max(0, x-1); break;
             case DirectionConst.NW: {
-                x = Math.max(0, x-1);
                 y = Math.max(0, y-1);
-                break;
-            }
-            case DirectionConst.W: x = Math.max(0, x-1); break;
-            case DirectionConst.SW: {
                 x = Math.max(0, x-1);
-                y = Math.min(map.capacity-1, y+1);
                 break;
             }
-            case DirectionConst.S: y = Math.min(map.capacity-1, y+1); break;
-            case DirectionConst.SE: {
+            case DirectionConst.W: y = Math.max(0, y-1); break;
+            case DirectionConst.SW: {
+                y = Math.max(0, y-1);
                 x = Math.min(map.capacity-1, x+1);
+                break;
+            }
+            case DirectionConst.S: x = Math.min(map.capacity-1, x+1); break;
+            case DirectionConst.SE: {
                 y = Math.min(map.capacity-1, y+1);
+                x = Math.min(map.capacity-1, x+1);
                 break;
             }
         }
@@ -65,7 +65,7 @@ public class MovableMechanic {
         GameMapCell cell;
         for(int i = -1; i <= 1; i++){
             for (int j = -1; j <= 1 ; j++) {
-                cell = map.getExistedCell(centerX + i, centerY + j);
+                cell = map.getExistedCell( centerX + i, centerY + j);
                 if (cell.ground != GroundTypeConst.WALL) {
                     if (!neighbors.contains(cell) && (cell.x != centerX || cell.y != centerY)) neighbors.add(cell);
                 }
@@ -87,7 +87,7 @@ public class MovableMechanic {
                 for (int j = -i; j <= i; j++) {
                     for (int k = -i; k <= i; k++) {
                         if (j != 0 || k != 0) {
-                            currentCell = map.getCell(centerX + j, centerY + k);
+                            currentCell = map.getExistedCell(centerX + j, centerY + k);
                             if (currentCell.plant != PlantTypeConst.NO_PLANT) {
                                 rangedCells.add(currentCell);
                             }
@@ -95,8 +95,8 @@ public class MovableMechanic {
                     }
                 }
                 if (!rangedCells.isEmpty()){
-                    Random random = new Random(rangedCells.size());
-                    findedCell = rangedCells.get(random.nextInt());
+                    Random random = new Random();
+                    findedCell = rangedCells.get(random.nextInt(rangedCells.size()));
                 }
             }
 
@@ -105,27 +105,27 @@ public class MovableMechanic {
     }
 
     public static int getDirectionByTwoCells(int startX, int startY, int endX, int endY){
-        if (Math.abs(startX - endX) > 1 || Math.abs(startY- endY) > 1) return DirectionConst.UNKNOWN_DIRECTION;
-        if (startX - endX == 1) {
-            if (startY - endY == 1) {
+        if (Math.abs(startY - endY) > 1 || Math.abs(startX- endX) > 1) return DirectionConst.UNKNOWN_DIRECTION;
+        if (startY - endY == 1) {
+            if (startX - endX == 1) {
                 return DirectionConst.NW;
-            } else if (startY - endY == -1) {
+            } else if (startX - endX == -1) {
                 return DirectionConst.SW;
             } else { // ==0
                 return DirectionConst.W;
             }
-        } else if (startX - endX == -1) {
-            if (startY - endY == 1) {
+        } else if (startY - endY == -1) {
+            if (startX - endX == 1) {
                 return DirectionConst.NE;
-            } else if (startY - endY == -1) {
+            } else if (startX - endX == -1) {
                 return DirectionConst.SE;
             } else { // ==0
                 return DirectionConst.E;
             }
         } else { // ==0
-            if (startY - endY == 1) {
+            if (startX - endX == 1) {
                 return DirectionConst.N;
-            } else if (startY - endY == -1) {
+            } else if (startX - endX == -1) {
                 return DirectionConst.S;
             } else { // ==0
                 return DirectionConst.UNKNOWN_DIRECTION;

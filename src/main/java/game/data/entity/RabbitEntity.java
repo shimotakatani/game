@@ -31,7 +31,7 @@ public class RabbitEntity extends AbstractEntity{
     @Column(name = "name")
     public String name;
 
-    @Column(name = "direction")
+    @Column(name = "tacticid")
     public int tacticId;
 
     public RabbitEntity(){

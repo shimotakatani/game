@@ -72,11 +72,11 @@ public class Rabbit extends GenericUnit{
         if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
             eatGrass(game.map.getCell(x, y), game.tactor);
         } else {
-            GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, this.x, this.y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
+            GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, x, y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
             if (nearestPlantCell != null) {
                 List<MapCellForPath> path = MovableMechanic.findPathWidth(game.map, x, y, nearestPlantCell.x, nearestPlantCell.y);
                 if (!path.isEmpty()) {
-                    int maybeDirection = MovableMechanic.getDirectionByTwoCells(x, y, path.get(0).x, path.get(0).y);
+                    int maybeDirection = MovableMechanic.getDirectionByTwoCells(x, y, path.get(1).x, path.get(1).y);
                     if (maybeDirection > 0 && maybeDirection < 9){
                         direction = maybeDirection;
                         goForvard(game.map.capacity);
@@ -100,16 +100,16 @@ public class Rabbit extends GenericUnit{
 
     private boolean canGoTo(int direction, Game game){
         if (direction == DirectionConst.E || direction == DirectionConst.NE || direction == DirectionConst.SE){
-            if (x == game.map.capacity) return false;
-        }
-        if (direction == DirectionConst.W || direction == DirectionConst.NW || direction == DirectionConst.SW){
-            if (x == 0) return false;
-        }
-        if (direction == DirectionConst.S || direction == DirectionConst.SE || direction == DirectionConst.SW){
             if (y == game.map.capacity) return false;
         }
-        if (direction == DirectionConst.N || direction == DirectionConst.NE || direction == DirectionConst.NW){
+        if (direction == DirectionConst.W || direction == DirectionConst.NW || direction == DirectionConst.SW){
             if (y == 0) return false;
+        }
+        if (direction == DirectionConst.S || direction == DirectionConst.SE || direction == DirectionConst.SW){
+            if (x == game.map.capacity) return false;
+        }
+        if (direction == DirectionConst.N || direction == DirectionConst.NE || direction == DirectionConst.NW){
+            if (x == 0) return false;
         }
         GameMapCell cell = MovableMechanic.getMapCellByDirection(game.map, direction, x, y);
         if (cell.ground == GroundTypeConst.WALL) return false;
@@ -121,28 +121,28 @@ public class Rabbit extends GenericUnit{
 
     private void goForvard(int capacity){
         switch (direction){
-            case DirectionConst.E: setX(Math.min(capacity-1, x+1)); break;
+            case DirectionConst.E: setY(Math.min(capacity-1, y+1)); break;
             case DirectionConst.NE: {
-                setX(Math.min(capacity-1, x+1));
-                setY(Math.max(0, y-1));
+                setY(Math.min(capacity-1, y+1));
+                setX(Math.max(0, x-1));
                 break;
             }
-            case DirectionConst.N: setY(Math.max(0, y-1)); break;
+            case DirectionConst.N: setX(Math.max(0, x-1)); break;
             case DirectionConst.NW: {
-                setX(Math.max(0, x-1));
                 setY(Math.max(0, y-1));
-                break;
-            }
-            case DirectionConst.W: setX(Math.max(0, x-1)); break;
-            case DirectionConst.SW: {
                 setX(Math.max(0, x-1));
-                setY(Math.min(capacity-1, y+1));
                 break;
             }
-            case DirectionConst.S: y = Math.min(capacity-1, y+1); break;
-            case DirectionConst.SE: {
+            case DirectionConst.W: setY(Math.max(0, y-1)); break;
+            case DirectionConst.SW: {
+                setY(Math.max(0, y-1));
                 setX(Math.min(capacity-1, x+1));
+                break;
+            }
+            case DirectionConst.S: setX(Math.min(capacity-1, x+1)); break;
+            case DirectionConst.SE: {
                 setY(Math.min(capacity-1, y+1));
+                setX(Math.min(capacity-1, x+1));
                 break;
             }
         }

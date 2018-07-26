@@ -9,7 +9,9 @@ import game.engine.commands.EndGameCommand;
 import game.engine.commands.NameCommand;
 import game.engine.commands.SaveCommand;
 import game.engine.commands.StartGameCommand;
+import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMap;
+import game.engine.objects.MapCellForPath;
 import game.engine.objects.units.Rabbit;
 import game.helper.GameHelper;
 import game.rest.dto.*;
@@ -160,5 +162,14 @@ public class RestResource {
     @RequestMapping(value = "/rest/now", method = RequestMethod.GET)
     public Long getInnerTime(){
         return GameHelper.game.tactor.getInnerTime();
+    }
+
+    @RequestMapping(value = "/rest/path", method = RequestMethod.GET)
+    public MessageDto getPath(@RequestParam("startX") int startX, @RequestParam("startY") int startY, @RequestParam("endX") int endX, @RequestParam("endY") int endY){
+        List<MapCellForPath> path = MovableMechanic.findPathWidth(GameHelper.game.map, startX, startY , endX, endY);
+        StringBuilder pathBuilder = new StringBuilder("start -> ");
+        path.forEach(mapCellForPath -> pathBuilder.append(mapCellForPath.x + ", " + mapCellForPath.y + " -> "));
+        pathBuilder.append("end");
+        return new MessageDto(pathBuilder.toString(), 0L);
     }
 }

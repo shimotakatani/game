@@ -1,6 +1,7 @@
 package game.engine.mechanics.Impl;
 
 import game.consts.DirectionConst;
+import game.consts.GroundTypeConst;
 import game.engine.Game;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
@@ -64,11 +65,29 @@ public class MovableMechanic {
         for(int i = -1; i <= 1; i++){
             for (int j = -1; j <= 1 ; j++) {
                 cell = map.getExistedCell(centerX + i, centerY + j);
-                if (!neighbors.contains(cell)) neighbors.add(cell);
+                if (cell.ground != GroundTypeConst.WALL) {
+                    if (!neighbors.contains(cell) && (cell.x != centerX || cell.y != centerY)) neighbors.add(cell);
+                }
             }
         }
 
         return neighbors;
+    }
+
+    private static boolean hasVisited(List<MapCellForPath> visited, int x, int y){
+        int i = 0;
+        if (visited.size() > 0) {
+            MapCellForPath currentCell = visited.get(i);
+            if (currentCell.x == x && currentCell.y ==y) return true;
+            while (i < visited.size()) {
+                i++;
+                if (i != visited.size()) {
+                    currentCell = visited.get(i);
+                    if (currentCell.x == x && currentCell.y == y) return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -101,13 +120,16 @@ public class MovableMechanic {
 
             if (currentCell.getX() == endX && currentCell.getY() == endY) break;
 
-            for (GameMapCell gameMapCell : getNeighbors(map, currentCell.getX(), currentCell.getY())) {
-                if ( ! ((gameMapCell.getX() == currentCell.getPreviousX()) && (gameMapCell.getY() == currentCell.getPreviousY()))) {
-                    MapCellForPath next = new MapCellForPath(gameMapCell);
-                    next.setPreviousX(currentCell.getX());
-                    next.setPreviousY(currentCell.getY());
-                    queue.add(next);
-                    visited.add(next);
+            List<GameMapCell> neith = getNeighbors(map, currentCell.getX(), currentCell.getY());
+            for (GameMapCell gameMapCell : neith) {
+                if (!hasVisited(visited, gameMapCell.getX(), gameMapCell.getY())) {
+                    if (!((gameMapCell.getX() == currentCell.getPreviousX()) && (gameMapCell.getY() == currentCell.getPreviousY()))) {
+                        MapCellForPath next = new MapCellForPath(gameMapCell);
+                        next.setPreviousX(currentCell.getX());
+                        next.setPreviousY(currentCell.getY());
+                        queue.add(next);
+                        visited.add(next);
+                    }
                 }
             }
         }
@@ -116,10 +138,23 @@ public class MovableMechanic {
 
         path.add(currentCell);
         int previousX, previousY;
-        while (currentCell.getX() != startX && currentCell.getY() != startY) {
+        while (currentCell.getX() != startX || currentCell.getY() != startY) {
             previousX = currentCell.getPreviousX();
             previousY = currentCell.getPreviousY();
-            currentCell = visited.stream().filter(item -> item.getX() == previousX && item.getY() == previousY).findFirst().get();
+            MapCellForPath item = visited.get(0);
+            int i = 0;
+            currentCell = null;
+            while (!(item.getX() == previousX && item.getY() == previousY) && i < visited.size()){
+                i++;
+                if (item.getX() == previousX && item.getY() == previousY) {
+                    currentCell = item;
+                } else if (i != visited.size()){
+                    item = visited.get(i);
+                }
+            }
+            if (i != visited.size()){
+                currentCell = visited.get(i);
+            }
             if (currentCell == null) break;
             path.add(currentCell);
         }

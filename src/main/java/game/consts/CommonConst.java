@@ -17,19 +17,19 @@ public class CommonConst {
     //Время сна между шагами(тактами) игры
     public static final long SLEEP_TIME_OUT = 1000L;
     //Максимальное количество стен
-    public static final int WALL_MAX_COUNT = 6;
+    public static final int WALL_MAX_COUNT = 60;
     //Максимальная длинна стены
-    public static final int WALL_MAX_LENGTH = 7;
+    public static final int WALL_MAX_LENGTH = 20;
     //Максимальное время жизни объектов мира в тактах
     public static final long MAX_LENGTH_OF_LIFE = 200000000000L;
     //Зайчья дальность видимости
     public static final int MAX_RANGE_RABBIT = 6;
     //Начальное среднее количество кочек травы
-    public static final int MIDDLE_COUNT_GRASS = 8;
+    public static final int MIDDLE_COUNT_GRASS = 80;
     //Дисперсия начального среднего количества кочек травы
-    public static final int DISPERS_COUNT_GRASS = 3;
+    public static final int DISPERS_COUNT_GRASS = 15;
     //Радиус начальных кочек травы
-    public static final int RANGE_GRASS = 3;
+    public static final int RANGE_GRASS = 6;
     //Интервал сохранения (для начала примерно четверть дня)
     public static final long SAVE_INTERVAL = 21500L;
     //Максимальный радиус карты для отправки по рест

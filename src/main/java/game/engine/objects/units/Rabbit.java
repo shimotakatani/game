@@ -85,9 +85,9 @@ public class Rabbit extends GenericUnit{
                     }
                 }
             }
+            //default: то есть в случае любого косяка основного метода
+            doOneRangeRandomEatTactic(game);
         }
-        //default: то есть в случае любого косяка основного метода
-        doOneRangeRandomEatTactic(game);
     }
 
     private void changeDirection(Game game){

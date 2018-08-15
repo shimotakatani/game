@@ -175,4 +175,9 @@ public class RestResource {
         TacticCommand.execute(GameHelper.game, clientId, tacticId);
         return new MessageDto("Тактика успешно изменена на тактику с номером " + tacticId, clientId);
     }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public TokenDto getToken(@RequestParam("username") String username, @RequestParam("password") String password){
+        return new TokenDto("12343434");
+    }
 }

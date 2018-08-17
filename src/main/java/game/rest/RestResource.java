@@ -28,6 +28,7 @@ import static game.consts.CommonConst.MAX_MAP_RADIUS_TO_SEND_BY_REST;
  */
 @RestController
 @CrossOrigin
+//todo добавить перехватчик на авторизованность
 public class RestResource {
     @Autowired
     private CommonRepository commonRepository;
@@ -176,8 +177,4 @@ public class RestResource {
         return new MessageDto("Тактика успешно изменена на тактику с номером " + tacticId, clientId);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public TokenDto getToken(@RequestParam("username") String username, @RequestParam("password") String password){
-        return new TokenDto("12343434");
-    }
 }

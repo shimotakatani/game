@@ -128,4 +128,88 @@
         </sql>
     </changeSet>
 
+    <changeSet id="201808171732" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.tables
+                where table_schema='public' and table_name = 'users'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу users</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."users" (
+            id BIGINT CONSTRAINT user_id PRIMARY KEY,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL,
+            rabbit_id BIGINT
+            );
+
+            COMMENT ON TABLE "public"."users" is 'Таблица пользователей';
+            COMMENT ON COLUMN "public"."users"."username" is 'Имя пользователя';
+            COMMENT ON COLUMN "public"."users"."password" is 'Пароль пользователя';
+            COMMENT ON COLUMN "public"."users"."rabbit_id" is 'Идентификатор управляемого кролика';
+        </sql>
+    </changeSet>
+
+    <changeSet id="201808171816" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from pg_available_extensions
+                where name='pgcrypto'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем расширение для генерации UUID</comment>
+        <sql>
+            create extension pgcrypto;
+        </sql>
+    </changeSet>
+
+    <changeSet id="201808171742" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.tables
+                where table_schema='public' and table_name = 'session'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу session</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."session" (
+            id BIGINT CONSTRAINT session_id PRIMARY KEY,
+            username TEXT NOT NULL,
+            token TEXT DEFAULT gen_random_uuid(),
+            active_to_time BIGINT,
+            create_time BIGINT
+            );
+
+            COMMENT ON TABLE "public"."session" is 'Таблица сессий';
+            COMMENT ON COLUMN "public"."session"."username" is 'Имя пользователя';
+            COMMENT ON COLUMN "public"."session"."token" is 'Токен сессии';
+            COMMENT ON COLUMN "public"."session"."active_to_time" is 'Время до которого активна сессия';
+            COMMENT ON COLUMN "public"."session"."create_time" is 'Время создания сессии';
+        </sql>
+    </changeSet>
+
+    <changeSet id="201808171755" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(1) from information_schema.tables
+                where table_schema='public' and table_name = 'history_session'
+            </sqlCheck>
+        </preConditions>
+        <comment>Добавляем таблицу history_session</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS "public"."history_session" (
+            id BIGINT CONSTRAINT history_session_id PRIMARY KEY,
+            username TEXT NOT NULL,
+            token TEXT DEFAULT gen_random_uuid(),
+            active_to_time BIGINT,
+            create_time BIGINT,
+            archive_time BIGINT
+            );
+
+            COMMENT ON TABLE "public"."history_session" is 'Таблица истории сессий';
+            COMMENT ON COLUMN "public"."history_session"."username" is 'Имя пользователя';
+            COMMENT ON COLUMN "public"."history_session"."token" is 'Токен сессии';
+            COMMENT ON COLUMN "public"."history_session"."active_to_time" is 'Время до которого активна сессия';
+            COMMENT ON COLUMN "public"."history_session"."create_time" is 'Время создания сессии';
+            COMMENT ON COLUMN "public"."history_session"."archive_time" is 'Время архивации сессии';
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

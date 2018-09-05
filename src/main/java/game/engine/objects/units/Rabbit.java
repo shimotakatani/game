@@ -3,6 +3,7 @@ package game.engine.objects.units;
 import game.consts.*;
 import game.engine.Game;
 import game.engine.mechanics.Impl.MovableMechanic;
+import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
 import game.engine.objects.MapCellForPath;
 import game.engine.tactor.Tactor;
@@ -10,6 +11,7 @@ import game.engine.tactor.Tactor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.*;
 
 /**
  * create time 26.02.2018
@@ -30,7 +32,7 @@ public class Rabbit extends GenericUnit{
     public Long clientId = 0L;
     public String name = "";
     public int tacticId = TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT;
-
+    private List<MapCellForPath> path = new ArrayList<>();
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
@@ -68,16 +70,43 @@ public class Rabbit extends GenericUnit{
         }
     }
 
+    private void setPathWithCalc(GameMap map, int startX, int startY, int endX, int endY, Rabbit thisRabbit){
+        thisRabbit.path = MovableMechanic.findPathWidth(map, startX, startY, endX, endY);
+    }
+
     private void doRangedRandomEatTactic(Game game){
+        Rabbit thisRabbit = this;
+        thisRabbit.path = new ArrayList<>();
         if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
             eatGrass(game.map.getCell(x, y), game.tactor);
         } else {
             GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, x, y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
             if (nearestPlantCell != null) {
-                List<MapCellForPath> path = MovableMechanic.findPathWidth(game.map, x, y, nearestPlantCell.x, nearestPlantCell.y);
+                ExecutorService executor = Executors.newFixedThreadPool(1);
+
+                Future<?> future = executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        setPathWithCalc(game.map, x, y, nearestPlantCell.x, nearestPlantCell.y, thisRabbit);            //        <-- your job
+                    }
+                });
+
+                executor.shutdown();            //        <-- reject all further submissions
+
+                try {
+                    future.get(1, TimeUnit.SECONDS);  //     <-- wait 8 seconds to finish
+                } catch (InterruptedException e) {    //     <-- possible error cases
+                    System.out.println("job was interrupted");
+                } catch (ExecutionException e) {
+                    System.out.println("caught exception: " + e.getCause());
+                } catch (TimeoutException e) {
+                    future.cancel(true);              //     <-- interrupt the job
+                    System.out.println("timeout");
+                }
+
                 if (!path.isEmpty()) {
                     int maybeDirection = MovableMechanic.getDirectionByTwoCells(x, y, path.get(1).x, path.get(1).y);
-                    if (maybeDirection > 0 && maybeDirection < 9){
+                    if (maybeDirection >= DirectionConst.E && maybeDirection <= DirectionConst.SE){
                         direction = maybeDirection;
                         goForvard(game.map.capacity);
                         return;

@@ -212,4 +212,24 @@
         </sql>
     </changeSet>
 
+    <changeSet id="201809061832" author="nponosov">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <sqlCheck expectedResult="1">select count(1) from information_schema.tables
+                    where table_schema='public' and table_name = 'rabbit'
+                </sqlCheck>
+                <sqlCheck expectedResult="0">select count(1) from information_schema.columns
+                    where table_schema='public' and table_name = 'rabbit' and column_name = 'need_sleep'
+                </sqlCheck>
+            </and>
+        </preConditions>
+        <comment>Добавляем поле tacticId в таблицу rabbit</comment>
+        <sql>
+            ALTER TABLE IF EXISTS "public"."rabbit"
+            ADD COLUMN need_sleep INTEGER default 0;
+
+            COMMENT ON COLUMN "public"."rabbit"."need_sleep" is 'Необходимость в сне(в процентах)';
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

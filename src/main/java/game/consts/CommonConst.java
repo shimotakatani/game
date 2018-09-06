@@ -15,7 +15,7 @@ public class CommonConst {
     //Размерность карты
     public static final int MAP_CAPACITY = 200;
     //Время сна между шагами(тактами) игры
-    public static final long SLEEP_TIME_OUT = 1000L;
+    public static final long SLEEP_TIME_OUT = 2000L;
     //Максимальное количество стен
     public static final int WALL_MAX_COUNT = 60;
     //Максимальная длинна стены

@@ -20,4 +20,13 @@ public class CommonRepository {
 
     @Autowired
     public GameRepository gameRepository;
+
+    @Autowired
+    public UserRepository userRepository;
+
+    @Autowired
+    public SessionRepository sessionRepository;
+
+    @Autowired
+    public HistorySessionRepository historySessionRepository;
 }

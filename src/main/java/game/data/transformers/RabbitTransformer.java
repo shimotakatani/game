@@ -21,6 +21,7 @@ public class RabbitTransformer {
         entity.eatedGrass = object.eatedGrass;
         entity.name = object.name;
         entity.tacticId = object.tacticId;
+        entity.needSleep = object.getNeedSleeping();
     }
 
     public static void entityToObject(Rabbit object, RabbitEntity entity){
@@ -32,6 +33,7 @@ public class RabbitTransformer {
         object.eatedGrass = entity.eatedGrass;
         object.name = entity.name;
         object.tacticId = entity.tacticId;
+        object.setNeedSleeping(entity.needSleep);
     }
 
     public static void objectToDto(Rabbit object, RabbitDto dto){
@@ -43,5 +45,7 @@ public class RabbitTransformer {
         dto.eatedGrass = object.eatedGrass;
         dto.name = object.name;
         dto.tacticId = object.tacticId;
+        dto.needSleep = object.getNeedSleeping();
+        dto.currentAction = object.getCurrentActionPicture();
     }
 }

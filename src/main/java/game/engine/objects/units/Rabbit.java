@@ -2,6 +2,7 @@ package game.engine.objects.units;
 
 import game.consts.*;
 import game.engine.Game;
+import game.engine.mechanics.Impl.MotivationMechanic;
 import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameMapCell;
@@ -33,6 +34,16 @@ public class Rabbit extends GenericUnit{
     public String name = "";
     public int tacticId = TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT;
     private List<MapCellForPath> path = new ArrayList<>();
+    private int currentActionPicture = ActionConst.UNKNOWN;
+
+    /*
+    * Необходимость в сне. От MIN_NEED_SLEEP до MAX_NEED_SLEEP. MIN_NEED_SLEEP - не нужно, MAX_NEED_SLEEP - валится с ног.
+    * */
+    private int needSleeping = AnimalStatConst.MIN_NEED_SLEEP;
+    /**
+     * Спал ли заяц прошлый ход
+     */
+    private boolean lastSleep = false;
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
@@ -41,23 +52,35 @@ public class Rabbit extends GenericUnit{
                 cell.plant = PlantTypeConst.NO_PLANT;
                 cell.eatedAtTime = tactor.getInnerTime();
                 eatedGrass++;
+                this.setCurrentActionPicture(ActionConst.EAT);
             }
         }
     }
 
     public void doTact(Game game){
-        switch (this.tacticId) {
-            case TacticTypeConst.RABBIT_RANGED_RANDOM_EAT:
-                doRangedRandomEatTactic(game);
-                break;
-            case TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT:
-                doOneRangeRandomEatTactic(game);
-                break;
-            default:
-                doOneRangeRandomEatTactic(game);
-                break;
+        if (MotivationMechanic.sleepNow(this, game)) {
+            doSleep();
+        } else {
+            this.lastSleep = false;
+            switch (this.tacticId) {
+                case TacticTypeConst.RABBIT_RANGED_RANDOM_EAT:
+                    doRangedRandomEatTactic(game);
+                    break;
+                case TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT:
+                    doOneRangeRandomEatTactic(game);
+                    break;
+                default:
+                    doOneRangeRandomEatTactic(game);
+                    break;
+            }
         }
 
+    }
+
+    private void doSleep(){
+        this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.SLEEP);
+        this.lastSleep = true;
+        this.setCurrentActionPicture(ActionConst.SLEEP);
     }
 
     private void doOneRangeRandomEatTactic(Game game){
@@ -66,6 +89,9 @@ public class Rabbit extends GenericUnit{
         } else {
             changeDirection(game);
             goForvard(game.map.capacity);
+            if (random.nextInt(2) == 1) {
+                this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.RANDOM);
+            }
 
         }
     }
@@ -109,6 +135,9 @@ public class Rabbit extends GenericUnit{
                     if (maybeDirection >= DirectionConst.E && maybeDirection <= DirectionConst.SE){
                         direction = maybeDirection;
                         goForvard(game.map.capacity);
+                        if (random.nextInt(2) == 1) {
+                            this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.WIDTH);
+                        }
                         return;
                         //в самом конце верного пути надо return
                     }
@@ -175,6 +204,7 @@ public class Rabbit extends GenericUnit{
                 break;
             }
         }
+        this.setCurrentActionPicture(ActionConst.MOVE);
     }
 
     /**
@@ -271,5 +301,29 @@ public class Rabbit extends GenericUnit{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getNeedSleeping() {
+        return needSleeping;
+    }
+
+    public void setNeedSleeping(int needSleeping) {
+        this.needSleeping = Math.max(Math.min(needSleeping, AnimalStatConst.MAX_NEED_SLEEP), AnimalStatConst.MIN_NEED_SLEEP);
+    }
+
+    public boolean isLastSleep() {
+        return lastSleep;
+    }
+
+    public void setLastSleep(boolean lastSleep) {
+        this.lastSleep = lastSleep;
+    }
+
+    public int getCurrentActionPicture() {
+        return currentActionPicture;
+    }
+
+    public void setCurrentActionPicture(int currentActionPicture) {
+        this.currentActionPicture = currentActionPicture;
     }
 }

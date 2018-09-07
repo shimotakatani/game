@@ -1,6 +1,7 @@
 package game.engine.objects.units;
 
 import game.consts.*;
+import game.data.enums.PlantEnum;
 import game.engine.Game;
 import game.engine.mechanics.Impl.MotivationMechanic;
 import game.engine.mechanics.Impl.MovableMechanic;
@@ -45,10 +46,16 @@ public class Rabbit extends GenericUnit{
      */
     private boolean lastSleep = false;
 
+    //Текущая сытость. От 0 до maxFat
+    private int fat = 100;
+    //Максимальная сытость - пока константа, потом наверное должно мочь меняться
+    private int maxFat = AnimalStatConst.MAX_FAT_RABBIT;
+
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
         synchronized (cell){
             if (cell.plant != PlantTypeConst.NO_PLANT) {
+                this.setFat(this.getFat() + PlantEnum.getByNumberOfTitle(cell.plant).plantCost);
                 cell.plant = PlantTypeConst.NO_PLANT;
                 cell.eatedAtTime = tactor.getInnerTime();
                 eatedGrass++;
@@ -231,7 +238,6 @@ public class Rabbit extends GenericUnit{
         return direction;
     }
 
-
     @Override
     public String toString() {
         return "\nЗаяц по имени " + name + " находится x:" + x + " y:" + y + "." + " Он съел " + eatedGrass + " пучков травы";
@@ -325,5 +331,21 @@ public class Rabbit extends GenericUnit{
 
     public void setCurrentActionPicture(int currentActionPicture) {
         this.currentActionPicture = currentActionPicture;
+    }
+
+    public int getFat() {
+        return fat;
+    }
+
+    public void setFat(int fat) {
+        this.fat = Math.max(Math.min(fat, this.getMaxFat()), 0);
+    }
+
+    public int getMaxFat() {
+        return maxFat;
+    }
+
+    public void setMaxFat(int maxFat) {
+        this.maxFat = maxFat;
     }
 }

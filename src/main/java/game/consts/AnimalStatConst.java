@@ -19,4 +19,6 @@ public class AnimalStatConst {
         public static final int WIDTH = 3;
         public static final int SLEEP = -5;
     }
+
+    public static final int MAX_FAT_RABBIT = 1000;
 }

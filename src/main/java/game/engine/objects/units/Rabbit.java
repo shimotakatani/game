@@ -1,7 +1,10 @@
 package game.engine.objects.units;
 
 import game.consts.*;
+import game.data.enums.ActionEnum;
+import game.data.enums.PlantEnum;
 import game.engine.Game;
+import game.engine.mechanics.Impl.CostMechanic;
 import game.engine.mechanics.Impl.MotivationMechanic;
 import game.engine.mechanics.Impl.MovableMechanic;
 import game.engine.objects.GameMap;
@@ -35,22 +38,27 @@ public class Rabbit extends GenericUnit{
     public int tacticId = TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT;
     private List<MapCellForPath> path = new ArrayList<>();
     private int currentActionPicture = ActionConst.UNKNOWN;
+    private ActionEnum lastAction = ActionEnum.NO_ACTION;
 
-    /*
-    * Необходимость в сне. От MIN_NEED_SLEEP до MAX_NEED_SLEEP. MIN_NEED_SLEEP - не нужно, MAX_NEED_SLEEP - валится с ног.
-    * */
-    private int needSleeping = AnimalStatConst.MIN_NEED_SLEEP;
     /**
-     * Спал ли заяц прошлый ход
-     */
-    private boolean lastSleep = false;
+     * Необходимость в сне. От MIN_NEED_SLEEP до MAX_NEED_SLEEP. MIN_NEED_SLEEP - не нужно, MAX_NEED_SLEEP - валится с ног.
+     * */
+    private int needSleeping = AnimalStatConst.MIN_NEED_SLEEP;
+
+    //Текущая сытость. От 0 до maxFat
+    private int fat = 100;
+    //Максимальная сытость - пока константа, потом наверное должно мочь меняться
+    private int maxFat = AnimalStatConst.MAX_FAT_RABBIT;
 
 
     private void eatGrass(GameMapCell cell, Tactor tactor){
         synchronized (cell){
             if (cell.plant != PlantTypeConst.NO_PLANT) {
+                this.setFat(this.getFat() + PlantEnum.getByNumberOfTitle(cell.plant).plantCost);
                 cell.plant = PlantTypeConst.NO_PLANT;
                 cell.eatedAtTime = tactor.getInnerTime();
+                CostMechanic.setFromAction(this, ActionEnum.EAT);
+                this.setLastAction(ActionEnum.EAT);
                 eatedGrass++;
                 this.setCurrentActionPicture(ActionConst.EAT);
             }
@@ -60,8 +68,9 @@ public class Rabbit extends GenericUnit{
     public void doTact(Game game){
         if (MotivationMechanic.sleepNow(this, game)) {
             doSleep();
+        } else if (MotivationMechanic.restNow(this, game)) {
+            doRest();
         } else {
-            this.lastSleep = false;
             switch (this.tacticId) {
                 case TacticTypeConst.RABBIT_RANGED_RANDOM_EAT:
                     doRangedRandomEatTactic(game);
@@ -77,10 +86,16 @@ public class Rabbit extends GenericUnit{
 
     }
 
+    private void doRest(){
+        CostMechanic.setFromAction(this, ActionEnum.NO_ACTION);
+        this.setLastAction(ActionEnum.NO_ACTION);
+    }
+
     private void doSleep(){
-        this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.SLEEP);
-        this.lastSleep = true;
-        this.setCurrentActionPicture(ActionConst.SLEEP);
+        //this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.SLEEP);
+        CostMechanic.setFromAction(this, ActionEnum.SLEEP);
+        this.setLastAction(ActionEnum.SLEEP);
+        //this.setCurrentActionPicture(ActionConst.SLEEP);
     }
 
     private void doOneRangeRandomEatTactic(Game game){
@@ -89,9 +104,10 @@ public class Rabbit extends GenericUnit{
         } else {
             changeDirection(game);
             goForvard(game.map.capacity);
-            if (random.nextInt(2) == 1) {
-                this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.RANDOM);
-            }
+            CostMechanic.setFromAction(this, ActionEnum.MOVE);
+//            if (random.nextInt(2) == 1) {
+//                this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.RANDOM);
+//            }
 
         }
     }
@@ -135,9 +151,11 @@ public class Rabbit extends GenericUnit{
                     if (maybeDirection >= DirectionConst.E && maybeDirection <= DirectionConst.SE){
                         direction = maybeDirection;
                         goForvard(game.map.capacity);
-                        if (random.nextInt(2) == 1) {
-                            this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.WIDTH);
-                        }
+                        CostMechanic.setFromAction(thisRabbit, ActionEnum.THINK_WIDTH);
+                        CostMechanic.setFromAction(thisRabbit, ActionEnum.MOVE);
+//                        if (random.nextInt(2) == 1) {
+//                            this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.WIDTH);
+//                        }
                         return;
                         //в самом конце верного пути надо return
                     }
@@ -205,6 +223,7 @@ public class Rabbit extends GenericUnit{
             }
         }
         this.setCurrentActionPicture(ActionConst.MOVE);
+        this.setLastAction(ActionEnum.MOVE);
     }
 
     /**
@@ -230,7 +249,6 @@ public class Rabbit extends GenericUnit{
             }
         return direction;
     }
-
 
     @Override
     public String toString() {
@@ -312,11 +330,11 @@ public class Rabbit extends GenericUnit{
     }
 
     public boolean isLastSleep() {
-        return lastSleep;
+        return getLastAction().equals(ActionEnum.SLEEP);
     }
 
-    public void setLastSleep(boolean lastSleep) {
-        this.lastSleep = lastSleep;
+    public boolean isLastRest() {
+        return getLastAction().equals(ActionEnum.NO_ACTION);
     }
 
     public int getCurrentActionPicture() {
@@ -325,5 +343,29 @@ public class Rabbit extends GenericUnit{
 
     public void setCurrentActionPicture(int currentActionPicture) {
         this.currentActionPicture = currentActionPicture;
+    }
+
+    public int getFat() {
+        return fat;
+    }
+
+    public void setFat(int fat) {
+        this.fat = Math.max(Math.min(fat, this.getMaxFat()), 0);
+    }
+
+    public int getMaxFat() {
+        return maxFat;
+    }
+
+    public void setMaxFat(int maxFat) {
+        this.maxFat = maxFat;
+    }
+
+    public ActionEnum getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(ActionEnum lastAction) {
+        this.lastAction = lastAction;
     }
 }

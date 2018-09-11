@@ -17,4 +17,5 @@ public class RabbitDto {
     public int tacticId = 0;
     public int needSleep = 0;
     public int currentAction = ActionConst.UNKNOWN;
+    public int fat = 0;
 }

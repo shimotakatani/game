@@ -22,6 +22,7 @@ public class RabbitTransformer {
         entity.name = object.name;
         entity.tacticId = object.tacticId;
         entity.needSleep = object.getNeedSleeping();
+        entity.fat = object.getFat();
     }
 
     public static void entityToObject(Rabbit object, RabbitEntity entity){
@@ -34,6 +35,7 @@ public class RabbitTransformer {
         object.name = entity.name;
         object.tacticId = entity.tacticId;
         object.setNeedSleeping(entity.needSleep);
+        object.setFat(entity.fat);
     }
 
     public static void objectToDto(Rabbit object, RabbitDto dto){
@@ -47,5 +49,6 @@ public class RabbitTransformer {
         dto.tacticId = object.tacticId;
         dto.needSleep = object.getNeedSleeping();
         dto.currentAction = object.getCurrentActionPicture();
+        dto.fat = object.getFat();
     }
 }

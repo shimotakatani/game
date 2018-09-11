@@ -37,6 +37,9 @@ public class RabbitEntity extends AbstractEntity{
     @Column(name = "need_sleep")
     public int needSleep;
 
+    @Column(name = "fat")
+    public int fat;
+
     public RabbitEntity(){
 
     }

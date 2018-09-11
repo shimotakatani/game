@@ -12,15 +12,15 @@ public class CostMechanic {
 
         Random random = new Random();
 
-        int energy = (random.nextInt(ActionConst.ActionEnergyCost.BASE * 2) + action.energyCost - ActionConst.ActionEnergyCost.BASE) / 2;
-        rabbit.setFat(rabbit.getFat() + energy);
+        int energy = (random.nextInt(ActionConst.ActionEnergyCost.BASE * 2) + action.energyCost - ActionConst.ActionEnergyCost.BASE) / 100;
+        rabbit.setFat(rabbit.getFat() - energy);
     }
 
     public static void setRabbitSleep(Rabbit rabbit, ActionEnum action){
 
         Random random = new Random();
 
-        int sleep = (random.nextInt(ActionConst.ActionSleepCost.BASE * 2) + action.sleepCost - ActionConst.ActionSleepCost.BASE) / 2;
+        int sleep = (random.nextInt(ActionConst.ActionSleepCost.BASE * 2) + action.sleepCost - ActionConst.ActionSleepCost.BASE) / 100;
         rabbit.setNeedSleeping(rabbit.getNeedSleeping() + sleep);
     }
 

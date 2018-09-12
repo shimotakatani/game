@@ -11,7 +11,7 @@ public class CommonConst {
     //время через которое в любом случае отрастает трава
     public static final long EAT_UP_TIME = 1280L;
     //знаменатель вероятности, с которой обновляем случайно выбранную лужайку травы
-    public static final int RANDOM_NUMBER_FOR_GRASS = 20;
+    public static final int RANDOM_NUMBER_FOR_GRASS = 200;
     //Размерность карты
     public static final int MAP_CAPACITY = 200;
     //Время сна между шагами(тактами) игры

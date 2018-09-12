@@ -41,14 +41,14 @@ public class MotivationMechanic {
         if (rabbit.getFat() == AnimalStatConst.ABSOLUTELY_NEED_REST) return true;
 
         //Большая вероятность уснуть если всё нормально и большая сонливость
-        if (rabbit.getNeedSleeping() > AnimalStatConst.ALMOSTLY_NEED_REST && !hasDanger(rabbit, game)) {
+        if (rabbit.getFat() > AnimalStatConst.ALMOSTLY_NEED_REST && !hasDanger(rabbit, game)) {
             Random random = new Random();
             int seed = random.nextInt(AnimalStatConst.BASE_RANDOM_REST);
             if (seed < AnimalStatConst.RANDOM_REST_PERCENT) return true;
         }
 
         //Продолжение отдыха если всё нормально и энергия не низкая
-        if (rabbit.getNeedSleeping() > AnimalStatConst.CONTINUE_NEED_REST && !hasDanger(rabbit, game) && rabbit.isLastRest()) {
+        if (rabbit.getFat() > AnimalStatConst.CONTINUE_NEED_REST && !hasDanger(rabbit, game) && rabbit.isLastRest()) {
             Random random = new Random();
             int seed = random.nextInt(AnimalStatConst.BASE_RANDOM_REST);
             if (seed < AnimalStatConst.RANDOM_REST_PERCENT) return true;

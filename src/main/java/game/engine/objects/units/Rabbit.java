@@ -89,13 +89,20 @@ public class Rabbit extends GenericUnit{
     private void doRest(){
         CostMechanic.setFromAction(this, ActionEnum.NO_ACTION);
         this.setLastAction(ActionEnum.NO_ACTION);
+        this.setCurrentActionPicture(ActionConst.NO_ACTION);
     }
 
     private void doSleep(){
         //this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.SLEEP);
         CostMechanic.setFromAction(this, ActionEnum.SLEEP);
         this.setLastAction(ActionEnum.SLEEP);
-        //this.setCurrentActionPicture(ActionConst.SLEEP);
+        this.setCurrentActionPicture(ActionConst.SLEEP);
+    }
+
+    private void doWalk(Game game){
+        changeDirection(game);
+        goForvard(game.map.capacity);
+        CostMechanic.setFromAction(this, ActionEnum.MOVE);
     }
 
     private void doOneRangeRandomEatTactic(Game game){

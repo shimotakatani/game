@@ -99,6 +99,12 @@ public class Rabbit extends GenericUnit{
         this.setCurrentActionPicture(ActionConst.SLEEP);
     }
 
+    private void doWalk(Game game){
+        changeDirection(game);
+        goForvard(game.map.capacity);
+        CostMechanic.setFromAction(this, ActionEnum.MOVE);
+    }
+
     private void doOneRangeRandomEatTactic(Game game){
         if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
             eatGrass(game.map.getCell(x, y), game.tactor);

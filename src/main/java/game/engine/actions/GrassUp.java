@@ -21,7 +21,7 @@ public class GrassUp {
         random.setSeed(tactor.getInnerTime());
         //todo вставить включение по опциям игры
         randomGrassUp(random, map);
-        uptimeGrassUp(map, tactor);
+        //uptimeGrassUp(map, tactor);
     }
 
     private static void randomGrassUp(Random random, GameMap map){

@@ -15,10 +15,10 @@ public class ActionConst {
         public static final int BASE = 100;
 
         public static final int UNKNOWN = 0;
-        public static final int EAT = 25;
-        public static final int MOVE = 200;
-        public static final int SLEEP = 10;
-        public static final int NO_ACTION = 15;
+        public static final int EAT = 55;
+        public static final int MOVE = 150;
+        public static final int SLEEP = 30;
+        public static final int NO_ACTION = 45;
         public static final int THINK_WIDTH = 75;
     }
 

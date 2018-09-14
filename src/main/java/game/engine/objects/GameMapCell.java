@@ -24,6 +24,8 @@ public class GameMapCell {
         this.x = x;
         this.y = y;
         this.color = GroundTypeConst.WHITE;
+        this.plant = PlantTypeConst.NO_PLANT;
+        this.ground = GroundTypeConst.WHITE;
     }
 
     public GameMapCell(){

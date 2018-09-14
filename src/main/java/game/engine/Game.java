@@ -83,8 +83,11 @@ public class Game implements Runnable {
             rabbits.add(rabbit);
         });
         if (startArgs.startMap != null) {
+            System.out.print("old map");
             this.map = startArgs.startMap;
+            System.out.print("old map is \n" + this.map.getMapSerilization());
         } else {
+            System.out.print("new map");
             this.map = new GameMap(CommonConst.MAP_CAPACITY);
             InitMechanic.initMap(this.map, this.startArgs);
         }
@@ -106,6 +109,9 @@ public class Game implements Runnable {
             tactor.nextTact(); //переходим на следующий шаг
             if (!rabbits.isEmpty()) {
                 rabbits.parallelStream().forEach(rabbit -> rabbit.doTact(this));
+            }
+            if (tactor.getInnerTime() % 20 == 0) {
+                System.out.print("map at " + tactor.getInnerTime() + "\n" + map.getMapSerilization());
             }
             GrassUp.grassUp(map, tactor);
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {

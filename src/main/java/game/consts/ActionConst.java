@@ -15,11 +15,11 @@ public class ActionConst {
         public static final int BASE = 100;
 
         public static final int UNKNOWN = 0;
-        public static final int EAT = 55;
-        public static final int MOVE = 150;
-        public static final int SLEEP = 30;
-        public static final int NO_ACTION = 45;
-        public static final int THINK_WIDTH = 75;
+        public static final int EAT = 12;
+        public static final int MOVE = 50;
+        public static final int SLEEP = 10;
+        public static final int NO_ACTION = 15;
+        public static final int THINK_WIDTH = 25;
     }
 
     public class ActionSleepCost{
@@ -28,10 +28,10 @@ public class ActionConst {
         public static final int BASE = 100;
 
         public static final int UNKNOWN = 0;
-        public static final int EAT = 125;
-        public static final int MOVE = 300;
+        public static final int EAT = 25;
+        public static final int MOVE = 30;
         public static final int SLEEP = -500;
-        public static final int NO_ACTION = 50;
-        public static final int THINK_WIDTH = 100;
+        public static final int NO_ACTION = 5;
+        public static final int THINK_WIDTH = 10;
     }
 }

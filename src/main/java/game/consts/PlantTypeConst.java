@@ -13,6 +13,6 @@ public class PlantTypeConst {
     public class PlantCost{
 
         public static final int NO_PLANT = 0;
-        public static final int GREEN = 3;
+        public static final int GREEN = 10;
     }
 }

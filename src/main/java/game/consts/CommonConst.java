@@ -9,13 +9,13 @@ package game.consts;
 public class CommonConst {
 
     //время через которое в любом случае отрастает трава
-    public static final long EAT_UP_TIME = 1280L;
+    public static final long EAT_UP_TIME = 12800L;
     //знаменатель вероятности, с которой обновляем случайно выбранную лужайку травы
-    public static final int RANDOM_NUMBER_FOR_GRASS = 200;
+    public static final int RANDOM_NUMBER_FOR_GRASS = 5;
     //Размерность карты
     public static final int MAP_CAPACITY = 200;
     //Время сна между шагами(тактами) игры
-    public static final long SLEEP_TIME_OUT = 2000L;
+    public static final long SLEEP_TIME_OUT = 1000L;
     //Максимальное количество стен
     public static final int WALL_MAX_COUNT = 60;
     //Максимальная длинна стены
@@ -25,7 +25,7 @@ public class CommonConst {
     //Зайчья дальность видимости
     public static final int MAX_RANGE_RABBIT = 6;
     //Начальное среднее количество кочек травы
-    public static final int MIDDLE_COUNT_GRASS = 80;
+    public static final int MIDDLE_COUNT_GRASS = 20;
     //Дисперсия начального среднего количества кочек травы
     public static final int DISPERS_COUNT_GRASS = 15;
     //Радиус начальных кочек травы

@@ -98,7 +98,7 @@ public class GameMap {
         StringBuilder builder = new StringBuilder();
         for (Vector<GameMapCell> rowsOfCell : rowsOfCells) {
             for (GameMapCell gameMapCell : rowsOfCell) {
-                builder.append(gameMapCell.color);
+                builder.append(gameMapCell.plant);
             }
             builder.append("\n");
         }

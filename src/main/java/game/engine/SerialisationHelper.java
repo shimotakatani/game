@@ -69,7 +69,7 @@ public class SerialisationHelper {
             rabbitColors.put(rabbit.y * map.capacity + rabbit.x, 1);
         });
         int startLine = new Long(cadr*CommonConst.MAX_CADR_LENGTH).intValue();
-        for (int i = startLine; i < map.capacity; i++){
+        for (int i = startLine; i < startLine + CommonConst.MAX_CADR_LENGTH; i++){
             Vector<GameMapCell> row = map.getRow(i);
             for (int j = 0; j < map.capacity; j++) {
                 if (rabbitColors.containsKey(i * map.capacity + j )) {

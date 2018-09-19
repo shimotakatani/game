@@ -11,6 +11,7 @@ import game.engine.objects.units.RabbitComporator;
 import game.rest.dto.MessageDto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -61,6 +62,26 @@ public class SerialisationHelper {
         return builder.toString();
     }
 
+    public static String getMapColorSerialization(GameMap map, Game game, Long cadr){
+        StringBuilder builder = new StringBuilder();
+        HashMap<Integer, Integer> rabbitColors = new HashMap<>();
+        game.rabbits.forEach(rabbit -> {
+            rabbitColors.put(rabbit.y * map.capacity + rabbit.x, 1);
+        });
+        int startLine = new Long(cadr*CommonConst.MAX_CADR_LENGTH).intValue();
+        for (int i = startLine; i < map.capacity; i++){
+            Vector<GameMapCell> row = map.getRow(i);
+            for (int j = 0; j < map.capacity; j++) {
+                if (rabbitColors.containsKey(i * map.capacity + j )) {
+                    builder.append(AnimalTypeConst.RABBIT);
+                } else {
+                    builder.append(getColorForSerilization(row.get(j)));
+                }
+            }
+        }
+        return builder.toString();
+    }
+
     public static GameMap getMapCut(GameMap map, int centerX, int centerY, int radius){
         GameMap resultMap = new GameMap(radius * 2 + 1);
 
@@ -92,7 +113,7 @@ public class SerialisationHelper {
 
     //Выбор цвета ячеек по приоритету цветов земли и растений
     private static int getColorForSerilization(GameMapCell cell){
-        if (cell.color != GroundTypeConst.WHITE) return cell.color;
+        //if (cell.color != GroundTypeConst.WHITE) return cell.color;
         //Самая приоритетная - стена
         if (cell.ground == GroundTypeConst.WALL) return GroundTypeConst.WALL;
         //Далее растения на клетке

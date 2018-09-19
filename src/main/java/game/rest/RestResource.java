@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static game.consts.CommonConst.MAP_CAPACITY;
+import static game.consts.CommonConst.MAX_CADR_LENGTH;
 import static game.consts.CommonConst.MAX_MAP_RADIUS_TO_SEND_BY_REST;
 
 /**
@@ -177,4 +179,9 @@ public class RestResource {
         return new MessageDto("Тактика успешно изменена на тактику с номером " + tacticId, clientId);
     }
 
+    @RequestMapping(value = "/rest/littleMap", method = RequestMethod.GET)
+    public MapCadrDto getLittleMap(@RequestParam("chatId") Long clientId, @RequestParam("cadr") Long cadr ){
+        String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
+        return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY);
+    }
 }

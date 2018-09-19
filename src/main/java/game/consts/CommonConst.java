@@ -36,4 +36,6 @@ public class CommonConst {
     public static final int MAX_MAP_RADIUS_TO_SEND_BY_REST = 25;
     //Максимальный радиус зайца
     public static final int DEFAULT_RABBIT_MAX_RANGE = 5;
+    // Максимальный размер кадра карты в строках(вообще произведение этого числа на длинну строки не должно превышать 10000)
+    public static final Long MAX_CADR_LENGTH = 20L;
 }

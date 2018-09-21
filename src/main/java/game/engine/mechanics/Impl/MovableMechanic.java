@@ -241,4 +241,25 @@ public class MovableMechanic {
 
         return findedPath;
     }
+
+    public static boolean canGoTo(Rabbit rabbit, int direction, Game game){
+        if (direction == DirectionConst.E || direction == DirectionConst.NE || direction == DirectionConst.SE){
+            if (rabbit.y == game.map.capacity) return false;
+        }
+        if (direction == DirectionConst.W || direction == DirectionConst.NW || direction == DirectionConst.SW){
+            if (rabbit.y == 0) return false;
+        }
+        if (direction == DirectionConst.S || direction == DirectionConst.SE || direction == DirectionConst.SW){
+            if (rabbit.x == game.map.capacity) return false;
+        }
+        if (direction == DirectionConst.N || direction == DirectionConst.NE || direction == DirectionConst.NW){
+            if (rabbit.x == 0) return false;
+        }
+        GameMapCell cell = MovableMechanic.getMapCellByDirection(game.map, direction, rabbit.x, rabbit.y);
+        if (cell.ground == GroundTypeConst.WALL) return false;
+        if (MovableMechanic.hasAnybodyOnCell(game, cell.x, cell.y)) return false;
+
+        //возможно будут ещё условия
+        return true;
+    }
 }

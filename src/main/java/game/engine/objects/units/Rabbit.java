@@ -105,10 +105,10 @@ public class Rabbit extends GenericUnit{
         CostMechanic.setFromAction(this, ActionEnum.MOVE);
     }
 
-    private void doOneRangeRandomEatTactic(Game game){
-        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
-            eatGrass(game.map.getCell(x, y), game.tactor);
-        } else {
+    public void doOneRangeRandomEatTactic(Game game){
+//        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
+//            eatGrass(game.map.getCell(x, y), game.tactor);
+//        } else {
             changeDirection(game);
             goForvard(game.map.capacity);
             CostMechanic.setFromAction(this, ActionEnum.MOVE);
@@ -116,19 +116,19 @@ public class Rabbit extends GenericUnit{
 //                this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.RANDOM);
 //            }
 
-        }
+        //}
     }
 
     private void setPathWithCalc(GameMap map, int startX, int startY, int endX, int endY, Rabbit thisRabbit){
         thisRabbit.path = MovableMechanic.findPathWidth(map, startX, startY, endX, endY);
     }
 
-    private void doRangedRandomEatTactic(Game game){
+    public void doRangedRandomEatTactic(Game game){
         Rabbit thisRabbit = this;
         thisRabbit.path = new ArrayList<>();
-        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
-            eatGrass(game.map.getCell(x, y), game.tactor);
-        } else {
+//        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
+//            eatGrass(game.map.getCell(x, y), game.tactor);
+//        } else {
             GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, x, y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
             if (nearestPlantCell != null) {
                 ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -170,7 +170,7 @@ public class Rabbit extends GenericUnit{
             }
             //default: то есть в случае любого косяка основного метода
             doOneRangeRandomEatTactic(game);
-        }
+        //}
     }
 
     private void changeDirection(Game game){
@@ -178,28 +178,7 @@ public class Rabbit extends GenericUnit{
         if (direction > -1) return;
         do {
             direction = random.nextInt(DirectionConst.DIRECTION_SIZE);
-        } while (!canGoTo(direction, game));
-    }
-
-    private boolean canGoTo(int direction, Game game){
-        if (direction == DirectionConst.E || direction == DirectionConst.NE || direction == DirectionConst.SE){
-            if (y == game.map.capacity) return false;
-        }
-        if (direction == DirectionConst.W || direction == DirectionConst.NW || direction == DirectionConst.SW){
-            if (y == 0) return false;
-        }
-        if (direction == DirectionConst.S || direction == DirectionConst.SE || direction == DirectionConst.SW){
-            if (x == game.map.capacity) return false;
-        }
-        if (direction == DirectionConst.N || direction == DirectionConst.NE || direction == DirectionConst.NW){
-            if (x == 0) return false;
-        }
-        GameMapCell cell = MovableMechanic.getMapCellByDirection(game.map, direction, x, y);
-        if (cell.ground == GroundTypeConst.WALL) return false;
-        if (MovableMechanic.hasAnybodyOnCell(game, cell.x, cell.y)) return false;
-
-        //возможно будут ещё условия
-        return true;
+        } while (!MovableMechanic.canGoTo(this, direction, game));
     }
 
     private void goForvard(int capacity){

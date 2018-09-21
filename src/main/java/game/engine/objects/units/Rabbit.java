@@ -50,73 +50,11 @@ public class Rabbit extends GenericUnit{
     //Максимальная сытость - пока константа, потом наверное должно мочь меняться
     private int maxFat = AnimalStatConst.MAX_FAT_RABBIT;
 
-
-    private void eatGrass(GameMapCell cell, Tactor tactor){
-        synchronized (cell){
-            if (cell.plant != PlantTypeConst.NO_PLANT) {
-                this.setFat(this.getFat() + PlantEnum.getByNumberOfTitle(cell.plant).plantCost);
-                cell.plant = PlantTypeConst.NO_PLANT;
-                cell.eatedAtTime = tactor.getInnerTime();
-                CostMechanic.setFromAction(this, ActionEnum.EAT);
-                this.setLastAction(ActionEnum.EAT);
-                eatedGrass++;
-                this.setCurrentActionPicture(ActionConst.EAT);
-            }
-        }
-    }
-
-    public void doTact(Game game){
-        if (MotivationMechanic.sleepNow(this, game)) {
-            doSleep();
-        } else if (MotivationMechanic.restNow(this, game)) {
-            doRest();
-        } else {
-            switch (this.tacticId) {
-                case TacticTypeConst.RABBIT_RANGED_RANDOM_EAT:
-                    doRangedRandomEatTactic(game);
-                    break;
-                case TacticTypeConst.RABBIT_ONE_RANGE_RANDOM_EAT:
-                    doOneRangeRandomEatTactic(game);
-                    break;
-                default:
-                    doOneRangeRandomEatTactic(game);
-                    break;
-            }
-        }
-
-    }
-
-    private void doRest(){
-        CostMechanic.setFromAction(this, ActionEnum.NO_ACTION);
-        this.setLastAction(ActionEnum.NO_ACTION);
-        this.setCurrentActionPicture(ActionConst.NO_ACTION);
-    }
-
-    private void doSleep(){
-        //this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.SLEEP);
-        CostMechanic.setFromAction(this, ActionEnum.SLEEP);
-        this.setLastAction(ActionEnum.SLEEP);
-        this.setCurrentActionPicture(ActionConst.SLEEP);
-    }
-
-    private void doWalk(Game game){
+    //todo Тоже можно унести в MovableMechanic
+    public void doOneRangeRandomEatTactic(Game game){
         changeDirection(game);
         goForvard(game.map.capacity);
         CostMechanic.setFromAction(this, ActionEnum.MOVE);
-    }
-
-    public void doOneRangeRandomEatTactic(Game game){
-//        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
-//            eatGrass(game.map.getCell(x, y), game.tactor);
-//        } else {
-            changeDirection(game);
-            goForvard(game.map.capacity);
-            CostMechanic.setFromAction(this, ActionEnum.MOVE);
-//            if (random.nextInt(2) == 1) {
-//                this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.RANDOM);
-//            }
-
-        //}
     }
 
     private void setPathWithCalc(GameMap map, int startX, int startY, int endX, int endY, Rabbit thisRabbit){
@@ -126,9 +64,6 @@ public class Rabbit extends GenericUnit{
     public void doRangedRandomEatTactic(Game game){
         Rabbit thisRabbit = this;
         thisRabbit.path = new ArrayList<>();
-//        if (game.map.getCell(x, y).plant != PlantTypeConst.NO_PLANT){
-//            eatGrass(game.map.getCell(x, y), game.tactor);
-//        } else {
             GameMapCell nearestPlantCell = MovableMechanic.getNearestAnyPlant(game.map, x, y, CommonConst.DEFAULT_RABBIT_MAX_RANGE);
             if (nearestPlantCell != null) {
                 ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -160,9 +95,6 @@ public class Rabbit extends GenericUnit{
                         goForvard(game.map.capacity);
                         CostMechanic.setFromAction(thisRabbit, ActionEnum.THINK_WIDTH);
                         CostMechanic.setFromAction(thisRabbit, ActionEnum.MOVE);
-//                        if (random.nextInt(2) == 1) {
-//                            this.setNeedSleeping(this.getNeedSleeping() + AnimalStatConst.AnimalTacticCost.WIDTH);
-//                        }
                         return;
                         //в самом конце верного пути надо return
                     }
@@ -170,7 +102,6 @@ public class Rabbit extends GenericUnit{
             }
             //default: то есть в случае любого косяка основного метода
             doOneRangeRandomEatTactic(game);
-        //}
     }
 
     private void changeDirection(Game game){

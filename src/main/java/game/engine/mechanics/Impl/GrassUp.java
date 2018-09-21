@@ -1,4 +1,4 @@
-package game.engine.actions;
+package game.engine.mechanics.Impl;
 
 import game.consts.CommonConst;
 import game.consts.GroundTypeConst;

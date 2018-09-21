@@ -113,9 +113,9 @@ public class Game implements Runnable {
             if (!rabbits.isEmpty()) {
                 rabbits.parallelStream().forEach(rabbit -> this.genericMechanic.doTact(this, rabbit));
             }
-            if (tactor.getInnerTime() % 20 == 0) {
-                System.out.print("map at " + tactor.getInnerTime() + "\n" + map.getMapSerilization());
-            }
+//            if (tactor.getInnerTime() % 20 == 0) {
+//                System.out.print("map at " + tactor.getInnerTime() + "\n" + map.getMapSerilization());
+//            }
             GrassUp.grassUp(map, tactor);
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {
                 SaveCommand.execute(this, repository);

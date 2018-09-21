@@ -174,11 +174,16 @@ public class Rabbit extends GenericUnit{
     }
 
     private void changeDirection(Game game){
+        int oldDirection = direction;
         direction = getDirectionToNearestGrass(game);
         if (direction > -1) return;
-        do {
-            direction = random.nextInt(DirectionConst.DIRECTION_SIZE);
-        } while (!MovableMechanic.canGoTo(this, direction, game));
+        if (random.nextInt(5) == 0 || !MovableMechanic.canGoTo(this, oldDirection, game)) {
+            do {
+                direction = random.nextInt(DirectionConst.DIRECTION_SIZE);
+            } while (!MovableMechanic.canGoTo(this, direction, game));
+        } else {
+            direction = oldDirection;
+        }
     }
 
     private void goForvard(int capacity){

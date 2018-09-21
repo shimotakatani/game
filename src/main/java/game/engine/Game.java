@@ -3,9 +3,9 @@ package game.engine;
 import game.consts.CommonConst;
 import game.data.entity.RabbitEntity;
 import game.data.repositories.CommonRepository;
-import game.data.repositories.RabbitRepository;
 import game.data.transformers.RabbitTransformer;
-import game.engine.actions.GrassUp;
+import game.engine.mechanics.Impl.GenericMechanicImpl;
+import game.engine.mechanics.Impl.GrassUp;
 import game.engine.commands.SaveCommand;
 import game.engine.mechanics.Impl.InitMechanic;
 import game.engine.objects.GameMap;
@@ -60,6 +60,8 @@ public class Game implements Runnable {
      */
     public CommonRepository repository;
 
+    public GenericMechanicImpl genericMechanic;
+
     /**
      * Конструктор + инициализация игры
      * Подумать, целесообразно ли вместе держать
@@ -74,6 +76,7 @@ public class Game implements Runnable {
         this.stats = new GameStats();
         this.tactor = new Tactor();
         this.repository = repository;
+        this.genericMechanic = new GenericMechanicImpl();
 
         List<RabbitEntity> rabbitsFromDB = new ArrayList<>();
         repository.rabbitRepository.findAll().iterator().forEachRemaining(rabbitsFromDB::add);
@@ -108,11 +111,11 @@ public class Game implements Runnable {
             //Обработка шагов игры
             tactor.nextTact(); //переходим на следующий шаг
             if (!rabbits.isEmpty()) {
-                rabbits.parallelStream().forEach(rabbit -> rabbit.doTact(this));
+                rabbits.parallelStream().forEach(rabbit -> this.genericMechanic.doTact(this, rabbit));
             }
-            if (tactor.getInnerTime() % 20 == 0) {
-                System.out.print("map at " + tactor.getInnerTime() + "\n" + map.getMapSerilization());
-            }
+//            if (tactor.getInnerTime() % 20 == 0) {
+//                System.out.print("map at " + tactor.getInnerTime() + "\n" + map.getMapSerilization());
+//            }
             GrassUp.grassUp(map, tactor);
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {
                 SaveCommand.execute(this, repository);

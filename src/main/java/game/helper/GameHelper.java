@@ -36,9 +36,9 @@ public class GameHelper {
             if (mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).count() == 1) {
                 MapEntity map = mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).findFirst().get();
                 GameMap gameMap = new GameMap(CommonConst.MAP_CAPACITY);
-                System.out.print("gameMap is " + gameMap.getMapSerilization());
+                //System.out.println("gameMap is " + gameMap.getMapSerilization());
                 MapTransformer.entityToObject(gameMap, map);
-                System.out.print("gameMap after load " + gameMap.getMapSerilization());
+                //System.out.println("gameMap after load " + gameMap.getMapSerilization());
                 startArgs.startMap = gameMap;
 
             }

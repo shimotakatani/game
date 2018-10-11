@@ -13,10 +13,11 @@ import org.springframework.web.util.HtmlUtils;
 @CrossOrigin
 public class SocketController {
 
-    @MessageMapping("/app")
-    @SendTo("/topic/greetings")
+    @MessageMapping("/{helloId}")
+    @SendTo("/topic/{helloId}")
     public SocketMessageDto greeting(MessageDto message) throws Exception {
         Thread.sleep(1000); // simulated delay
+        System.out.println("receive: " + message.toString());
         return new SocketMessageDto("Hello, " + message.chatId + "!");
     }
 

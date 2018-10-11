@@ -86,11 +86,11 @@ public class Game implements Runnable {
             rabbits.add(rabbit);
         });
         if (startArgs.startMap != null) {
-            System.out.print("old map");
+            System.out.println("old map");
             this.map = startArgs.startMap;
-            System.out.print("old map is \n" + this.map.getMapSerilization());
+            //System.out.print("old map is \n" + this.map.getMapSerilization());
         } else {
-            System.out.print("new map");
+            System.out.println("new map");
             this.map = new GameMap(CommonConst.MAP_CAPACITY);
             InitMechanic.initMap(this.map, this.startArgs);
         }

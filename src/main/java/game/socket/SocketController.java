@@ -23,4 +23,13 @@ public class SocketController {
         return new SocketMessageDto("Hello, " + helloId + "!");
     }
 
+    @MessageMapping("/delete/{helloId}")
+    @SendTo("/topic/{helloId}")
+    public SocketMessageDto deleteUser(MessageDto message,
+                                    @DestinationVariable Long helloId) throws Exception {
+        System.out.println("greeting : receive: " + message.toString());
+        SocketHelper.activeUserId.remove(helloId);
+        return new SocketMessageDto("By, " + helloId + "!");
+    }
+
 }

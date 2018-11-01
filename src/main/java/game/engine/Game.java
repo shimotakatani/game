@@ -13,6 +13,7 @@ import game.engine.objects.GameOptions;
 import game.engine.objects.GameStats;
 import game.engine.objects.units.Rabbit;
 import game.engine.tactor.Tactor;
+import game.socket.SubscribeListener;
 import org.apache.log4j.Logger;
 
 import javax.persistence.Entity;
@@ -61,6 +62,8 @@ public class Game implements Runnable {
     public CommonRepository repository;
 
     public GenericMechanicImpl genericMechanic;
+
+    public SubscribeListener subscribeListener;
 
     /**
      * Конструктор + инициализация игры
@@ -120,6 +123,7 @@ public class Game implements Runnable {
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {
                 SaveCommand.execute(this, repository);
             }
+            subscribeListener.sendToSubscribedUsers();
             try {
                 Thread.sleep(CommonConst.SLEEP_TIME_OUT);
             } catch (InterruptedException e) {

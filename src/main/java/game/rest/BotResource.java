@@ -10,6 +10,7 @@ import game.engine.commands.NameCommand;
 import game.engine.commands.SaveCommand;
 import game.engine.commands.StartGameCommand;
 import game.helper.GameHelper;
+import game.socket.SubscribeListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import game.rest.dto.MessageDto;
@@ -35,6 +36,9 @@ public class BotResource {
 
     @Autowired
     private CommonRepository commonRepository;
+
+    @Autowired
+    public SubscribeListener subscribeListener;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MessageDto test(){
@@ -77,7 +81,7 @@ public class BotResource {
 
     @RequestMapping(value = "/startServer", method = RequestMethod.GET)
     public MessageDto startServer(){
-        GameHelper.startServer(commonRepository);
+        GameHelper.startServer(commonRepository, subscribeListener);
         return new MessageDto("Игра на сервере запущена", 1L);
     }
 

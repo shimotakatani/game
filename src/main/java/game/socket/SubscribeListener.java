@@ -99,5 +99,16 @@ public class SubscribeListener implements ApplicationListener<SessionSubscribeEv
 
             // Добавить покаддровую отправку миникарты
         }
+
+        //отправка счёта
+        List<RabbitDto> rabbitDtoList = new ArrayList<>();
+        for (Rabbit rabbit : GameHelper.game.rabbits) {
+            RabbitDto rabbitDto = new RabbitDto();
+            RabbitTransformer.objectToDto(rabbit, rabbitDto);
+            rabbitDtoList.add(rabbitDto);
+        }
+
+        messagingTemplate.convertAndSend("/topic/posts", rabbitDtoList);
+
     }
 }

@@ -13,6 +13,7 @@ import game.engine.objects.GameOptions;
 import game.engine.objects.GameStats;
 import game.engine.objects.units.Rabbit;
 import game.engine.tactor.Tactor;
+import game.socket.SubscribeListener;
 import org.apache.log4j.Logger;
 
 import javax.persistence.Entity;
@@ -62,6 +63,8 @@ public class Game implements Runnable {
 
     public GenericMechanicImpl genericMechanic;
 
+    public SubscribeListener subscribeListener;
+
     /**
      * Конструктор + инициализация игры
      * Подумать, целесообразно ли вместе держать
@@ -86,11 +89,11 @@ public class Game implements Runnable {
             rabbits.add(rabbit);
         });
         if (startArgs.startMap != null) {
-            System.out.print("old map");
+            System.out.println("old map");
             this.map = startArgs.startMap;
-            System.out.print("old map is \n" + this.map.getMapSerilization());
+            //System.out.print("old map is \n" + this.map.getMapSerilization());
         } else {
-            System.out.print("new map");
+            System.out.println("new map");
             this.map = new GameMap(CommonConst.MAP_CAPACITY);
             InitMechanic.initMap(this.map, this.startArgs);
         }
@@ -120,6 +123,7 @@ public class Game implements Runnable {
             if (tactor.getInnerTime() % CommonConst.SAVE_INTERVAL == 0) {
                 SaveCommand.execute(this, repository);
             }
+            subscribeListener.sendToSubscribedUsers();
             try {
                 Thread.sleep(CommonConst.SLEEP_TIME_OUT);
             } catch (InterruptedException e) {

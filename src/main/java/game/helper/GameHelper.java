@@ -13,6 +13,7 @@ import game.engine.SerialisationHelper;
 import game.engine.objects.GameMap;
 import game.engine.objects.GameOptions;
 import game.rest.dto.MessageDto;
+import game.socket.SubscribeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class GameHelper {
 
     public static Game game;
 
-    public static void startServer(CommonRepository commonRepository){
+    public static void startServer(CommonRepository commonRepository, SubscribeListener subscribeListener){
         if (game == null) {
             startArgs = new GameOptions();
             List<MapEntity> mapEntityList = new ArrayList<>();
@@ -36,9 +37,9 @@ public class GameHelper {
             if (mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).count() == 1) {
                 MapEntity map = mapEntityList.stream().filter(mapEntity -> mapEntity.capacity == CommonConst.MAP_CAPACITY).findFirst().get();
                 GameMap gameMap = new GameMap(CommonConst.MAP_CAPACITY);
-                System.out.print("gameMap is " + gameMap.getMapSerilization());
+                //System.out.println("gameMap is " + gameMap.getMapSerilization());
                 MapTransformer.entityToObject(gameMap, map);
-                System.out.print("gameMap after load " + gameMap.getMapSerilization());
+                //System.out.println("gameMap after load " + gameMap.getMapSerilization());
                 startArgs.startMap = gameMap;
 
             }
@@ -47,6 +48,7 @@ public class GameHelper {
                 startArgs.startTime = gameEntityIterable.iterator().next().gameTime;
             }
             game = new Game(null, startArgs, commonRepository);
+            game.subscribeListener = subscribeListener;
             game.run();
         }
     }

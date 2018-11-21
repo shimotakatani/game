@@ -12,6 +12,7 @@ import game.engine.objects.MapCellForPath;
 import game.engine.objects.units.Rabbit;
 import game.helper.GameHelper;
 import game.rest.dto.*;
+import game.socket.SubscribeListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,9 @@ import static game.consts.CommonConst.MAX_MAP_RADIUS_TO_SEND_BY_REST;
 public class RestResource {
     @Autowired
     private CommonRepository commonRepository;
+
+    @Autowired
+    public SubscribeListener subscribeListener;
 
     @RequestMapping(value = "/rest/test", method = RequestMethod.GET)
     public MessageDto test(){
@@ -102,7 +106,7 @@ public class RestResource {
 
     @RequestMapping(value = "/rest/startServer", method = RequestMethod.GET)
     public MessageDto startServer(){
-        GameHelper.startServer(commonRepository);
+        GameHelper.startServer(commonRepository, subscribeListener);
         return new MessageDto("Игра на сервере запущена", 1L);
     }
 
@@ -182,6 +186,6 @@ public class RestResource {
     @RequestMapping(value = "/rest/littleMap", method = RequestMethod.GET)
     public MapCadrDto getLittleMap(@RequestParam("chatId") Long clientId, @RequestParam("cadr") Long cadr ){
         String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
-        return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY);
+        return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY, GameHelper.game.tactor.getInnerTime());
     }
 }

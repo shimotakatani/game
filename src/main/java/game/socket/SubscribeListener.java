@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static game.consts.CommonConst.MAP_CAPACITY;
+import static game.consts.CommonConst.MAX_CADR_LENGTH;
+
 @Component
 public class SubscribeListener implements ApplicationListener<SessionSubscribeEvent> {
 
@@ -109,6 +112,13 @@ public class SubscribeListener implements ApplicationListener<SessionSubscribeEv
         }
 
         messagingTemplate.convertAndSend("/topic/posts", rabbitDtoList);
+
+
+        //Отправка карты
+        for (Long i = 0L; i < MAP_CAPACITY/MAX_CADR_LENGTH; i++) {
+            String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, i);
+            messagingTemplate.convertAndSend("/topic/map", new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), i, (i+1)*MAX_CADR_LENGTH >= MAP_CAPACITY, GameHelper.game.tactor.getInnerTime()));
+        }
 
     }
 }

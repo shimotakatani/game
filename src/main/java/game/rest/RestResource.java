@@ -186,6 +186,6 @@ public class RestResource {
     @RequestMapping(value = "/rest/littleMap", method = RequestMethod.GET)
     public MapCadrDto getLittleMap(@RequestParam("chatId") Long clientId, @RequestParam("cadr") Long cadr ){
         String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
-        return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY);
+        return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY, GameHelper.game.tactor.getInnerTime());
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-@CrossOrigin
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private static final String SOCKJS_VERSION = "https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js";

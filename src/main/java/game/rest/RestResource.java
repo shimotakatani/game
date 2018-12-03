@@ -30,7 +30,7 @@ import static game.consts.CommonConst.MAX_MAP_RADIUS_TO_SEND_BY_REST;
  * @author nponosov
  */
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 //todo добавить перехватчик на авторизованность
 public class RestResource {
     @Autowired

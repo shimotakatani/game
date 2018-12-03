@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class SocketController {
 
     @MessageMapping("/{helloId}")

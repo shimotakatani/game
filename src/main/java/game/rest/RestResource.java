@@ -39,11 +39,20 @@ public class RestResource {
     @Autowired
     public SubscribeListener subscribeListener;
 
+    /**
+     * Метод для проверки работоспособности рест апи
+     * @return серилизованный объект игры
+     */
     @RequestMapping(value = "/rest/test", method = RequestMethod.GET)
     public MessageDto test(){
         return GameHelper.test();
     }
 
+    /**
+     * Получить собранные данные по игре для данного клиента
+     * @param clientId - идентификатор клиента
+     * @return данные по основным аспектам игры
+     */
     @RequestMapping(value = "/rest/game", method = RequestMethod.GET)
     public AllDto game(@RequestParam("chatId") Long clientId){
 
@@ -75,41 +84,77 @@ public class RestResource {
         return dto;
     }
 
+    /**
+     * Метод для запуска игры с определённым идентификатором клиента
+     * @param clientId - идентификатор клиента
+     * @return сообщение по запуску игры
+     */
     @RequestMapping(value = "/rest/start", method = RequestMethod.GET)
     public MessageDto start(@RequestParam("chatId") Long clientId){
         StartGameCommand.execute(GameHelper.game, clientId);
         return new MessageDto("Ваша игра успешно запущена", clientId);
     }
 
+    /**
+     * Метод для окончания игры определённого клиента
+     * @param clientId - идентификатор клиента
+     * @return серилизованный объект игры
+     */
     @RequestMapping(value = "/rest/end", method = RequestMethod.GET)
     public MessageDto end(@RequestParam("chatId") Long clientId){
         EndGameCommand.execute(GameHelper.game, clientId);
         return SerialisationHelper.getGameSerialization(GameHelper.game, clientId);
     }
 
+    /**
+     * Переименование зайца
+     * @param clientId - идентификатор клиента
+     * @param name - новое имя зайца
+     * @return данные по зайцу
+     */
     @RequestMapping(value = "/rest/name", method = RequestMethod.GET)
     public MessageDto name(@RequestParam("chatId") Long clientId, @RequestParam("name") String name){
         NameCommand.execute(GameHelper.game, clientId, name);
         return new MessageDto(SerialisationHelper.getRabbitSerilization(GameHelper.game, clientId), 1L);
     }
 
+    /**
+     * Получить счёт по игре
+     * @param clientId - идентификатор клиента
+     * @return счёт по игре
+     */
     @RequestMapping(value = "/rest/score", method = RequestMethod.GET)
     public MessageDto score(@RequestParam("chatId") Long clientId){
         return new MessageDto(SerialisationHelper.getGeneralScoreSerilization(GameHelper.game, clientId), 1L);
     }
 
+    /**
+     * Сохранение состояния игры
+     * Автоматическое сохранение происходит как правило раз в 6 часов(пока, меняется в конфиге)
+     * @return сообщение об успешном сохранении
+     */
     @RequestMapping(value = "/rest/save", method = RequestMethod.GET)
     public MessageDto save(){
         SaveCommand.execute(GameHelper.game, commonRepository);
         return new MessageDto("Сохранение зайцев успешно завершено", 1L);
     }
 
+    /**
+     * Запуск игры, но только если она не запущена.
+     * Сейчас немного бесполезная функция, в перспективе будет доступна из админки для управления разными играми.
+     * @return сообщение об успешном запуске игры.
+     */
     @RequestMapping(value = "/rest/startServer", method = RequestMethod.GET)
     public MessageDto startServer(){
         GameHelper.startServer(commonRepository, subscribeListener);
         return new MessageDto("Игра на сервере запущена", 1L);
     }
 
+    /**
+     * Получение всего состояние текущей игры
+     * !!!!Не работает, так как карта не влазит в пакет.
+     * @return всё состояние, но по факту не отработает.
+     */
     @RequestMapping(value = "/rest/all", method = RequestMethod.GET)
     public AllDto all(){
         AllDto dto = new AllDto();
@@ -134,6 +179,11 @@ public class RestResource {
         return dto;
     }
 
+    /**
+     * Получить кусок карты по заданным параметрам
+     * @param requestDto - объект параметров для выборки куска карты
+     * @return кусок карты
+     */
     @RequestMapping(value = "/rest/mapCut", method = RequestMethod.POST)
     public MapDto getMapCut(@RequestBody MapRequestDto requestDto){
 
@@ -150,6 +200,10 @@ public class RestResource {
         return mapDto;
     }
 
+    /**
+     * Получить список зайцев
+     * @return список зайцев
+     */
     @RequestMapping(value = "/rest/rabbit/list", method = RequestMethod.GET)
     public List<RabbitDto> getRabbitList(){
 
@@ -163,11 +217,23 @@ public class RestResource {
         return rabbitDtoList;
     }
 
+    /**
+     * Получить текущее время
+     * @return текущее время
+     */
     @RequestMapping(value = "/rest/now", method = RequestMethod.GET)
     public Long getInnerTime(){
         return GameHelper.game.tactor.getInnerTime();
     }
 
+    /**
+     * Получить путь, построенный из точки начало в точку конец
+     * @param startX - х начала
+     * @param startY - у начала
+     * @param endX - х конца
+     * @param endY - у конца
+     * @return страна
+     */
     @RequestMapping(value = "/rest/path", method = RequestMethod.GET)
     public MessageDto getPath(@RequestParam("startX") int startX, @RequestParam("startY") int startY, @RequestParam("endX") int endX, @RequestParam("endY") int endY){
         List<MapCellForPath> path = MovableMechanic.findPathWidth(GameHelper.game.map, startX, startY , endX, endY);
@@ -177,15 +243,45 @@ public class RestResource {
         return new MessageDto(pathBuilder.toString(), 0L);
     }
 
+    /**
+     * Установить тактику для конкретного зайца
+     * @param clientId - идентификатор клиента
+     * @param tacticId - идентификатор тактики
+     * @return сообщение об успешной смене тактики
+     */
     @RequestMapping(value = "/rest/setTactic", method = RequestMethod.GET)
     public MessageDto setTactic(@RequestParam("chatId") Long clientId, @RequestParam("tacticId") int tacticId){
         TacticCommand.execute(GameHelper.game, clientId, tacticId);
         return new MessageDto("Тактика успешно изменена на тактику с номером " + tacticId, clientId);
     }
 
+    /**
+     * Получить миникарту текущей игры покадрово
+     * @param clientId - идентификатор клиента
+     * @param cadr - номер кадра
+     * @return кадр карты
+     */
     @RequestMapping(value = "/rest/littleMap", method = RequestMethod.GET)
     public MapCadrDto getLittleMap(@RequestParam("chatId") Long clientId, @RequestParam("cadr") Long cadr ){
         String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
         return new MapCadrDto(mapStr,  new Long(GameHelper.game.map.capacity), cadr, (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY, GameHelper.game.tactor.getInnerTime());
+    }
+
+    /**
+     * Получить карту с конкретным id покадрово с более полной информацией
+     * @param mapId - id карты
+     * @param cadr - номер кадра
+     * @return кадр карты
+     */
+    @RequestMapping(value = "/rest/map", method = RequestMethod.GET)
+    public MapCadrDto getMapById(@RequestParam("id") Long mapId, @RequestParam("cadr") Long cadr ){
+        if (cadr == null) cadr = 0L;
+
+        String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
+        return new MapCadrDto(mapStr,
+                new Long(GameHelper.game.map.capacity),
+                cadr,
+                (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY,
+                GameHelper.game.tactor.getInnerTime());
     }
 }

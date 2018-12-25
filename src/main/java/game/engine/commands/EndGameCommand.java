@@ -13,6 +13,6 @@ public class EndGameCommand extends AbstractCommand {
 
     public static void execute(Game game, Long clientId){
 
-        game.rabbits = game.rabbits.stream().filter(rabbit -> rabbit.clientId.equals(clientId)).collect(Collectors.toList());
+        game.rabbits = game.rabbits.stream().filter(rabbit -> !rabbit.clientId.equals(clientId)).collect(Collectors.toList());
     }
 }

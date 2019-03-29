@@ -82,6 +82,19 @@ public class SerialisationHelper {
         return builder.toString();
     }
 
+    public static String getMapSerialization(GameMap map, Long cadr){
+        StringBuilder builder = new StringBuilder();
+
+        int startLine = new Long(cadr*CommonConst.MAX_CADR_LENGTH).intValue();
+        for (int i = startLine; i < (startLine + CommonConst.MAX_CADR_LENGTH) && i < map.capacity; i++){
+            Vector<GameMapCell> row = map.getRow(i);
+            for (int j = 0; j < map.capacity; j++) {
+                builder.append(getColorForSerilization(row.get(j)));
+            }
+        }
+        return builder.toString();
+    }
+
     public static GameMap getMapCut(GameMap map, int centerX, int centerY, int radius){
         GameMap resultMap = new GameMap(radius * 2 + 1);
 

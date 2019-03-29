@@ -1,7 +1,9 @@
 package game.rest;
 
 import game.consts.CommonConst;
+import game.data.entity.MapEntity;
 import game.data.repositories.CommonRepository;
+import game.data.transformers.MapInfoTransformer;
 import game.data.transformers.MapTransformer;
 import game.data.transformers.RabbitTransformer;
 import game.engine.SerialisationHelper;
@@ -277,11 +279,59 @@ public class RestResource {
     public MapCadrDto getMapById(@RequestParam("id") Long mapId, @RequestParam("cadr") Long cadr ){
         if (cadr == null) cadr = 0L;
 
-        String mapStr = SerialisationHelper.getMapColorSerialization(GameHelper.game.map, GameHelper.game, cadr);
+        String mapStr = "";
+        MapEntity map = commonRepository.mapRepository.findById(mapId).orElse(null);
+
+        if (map != null) {
+            GameMap gameMap = new GameMap(map.capacity);
+            MapTransformer.entityToObject(gameMap, map);
+            mapStr = SerialisationHelper.getMapSerialization(gameMap,  cadr);
+        }
+
         return new MapCadrDto(mapStr,
                 new Long(GameHelper.game.map.capacity),
                 cadr,
                 (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY,
                 GameHelper.game.tactor.getInnerTime());
+    }
+
+    /**
+     * Создать новую карту
+     * @param capacity - размерность карты
+     * @return сообщение о создании/несоздании карты
+     */
+    @RequestMapping(value = "/rest/map/create", method = RequestMethod.POST)
+    public MessageDto postCreateMap(@RequestBody int capacity){
+        if (capacity > 0) {
+            GameMap gameMap = new GameMap(capacity);
+            MapEntity map = new MapEntity();
+            MapTransformer.objectToEntity(gameMap, map);
+            commonRepository.mapRepository.save(map);
+            return new MessageDto("Карта успешно создана", 0L);
+        } else {
+            return new MessageDto("Размерность меньше 1, карта не может быть создана", 0L);
+        }
+    }
+
+    /**
+     * Получить список карт
+     * @return список карт
+     */
+    @RequestMapping(value = "/rest/map/list", method = RequestMethod.GET)
+    public List<MapInfoDto> getMapList(){
+
+        List<MapInfoDto> mapInfoDtoList = new ArrayList<>();
+        List<MapEntity> mapEntityList = new ArrayList<>();
+        commonRepository.mapRepository.findAll().iterator().forEachRemaining(mapEntityList::add);
+
+        if ( ! mapEntityList.isEmpty()) {
+            mapEntityList.forEach(mapEntity -> {
+                MapInfoDto dto = new MapInfoDto();
+                MapInfoTransformer.entityToDto(mapEntity, dto);
+                mapInfoDtoList.add(dto);
+            });
+        }
+
+        return mapInfoDtoList;
     }
 }

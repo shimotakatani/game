@@ -88,7 +88,7 @@ public class Rabbit extends GenericUnit{
                     System.out.println("timeout");
                 }
 
-                if (!path.isEmpty()) {
+                if (!path.isEmpty() && path.size() > 1) {
                     int maybeDirection = MovableMechanic.getDirectionByTwoCells(x, y, path.get(1).x, path.get(1).y);
                     if (maybeDirection >= DirectionConst.E && maybeDirection <= DirectionConst.SE){
                         direction = maybeDirection;

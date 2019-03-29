@@ -25,12 +25,16 @@ public class GrassUp {
     }
 
     private static void randomGrassUp(Random random, GameMap map){
-        if (random.nextInt(CommonConst.RANDOM_NUMBER_FOR_GRASS) == 0) {
-            int x = random.nextInt(map.capacity);
-            int y = random.nextInt(map.capacity);
-            if (map.getCell(x, y).ground == GroundTypeConst.WALL) return;
-            map.getCell(x, y).plant = PlantTypeConst.GREEN;
+        for (int i = 0; i < CommonConst.RANDOM_NUMBER_CHANCE_GRASS; i++) {
+            if (random.nextInt(CommonConst.RANDOM_NUMBER_FOR_GRASS) == 0) {
+                int x = random.nextInt(map.capacity);
+                int y = random.nextInt(map.capacity);
+                if (! (map.getCell(x, y).ground == GroundTypeConst.WALL)) {
+                    map.getCell(x, y).plant = PlantTypeConst.GREEN;
+                }
+            }
         }
+
     }
 
     //Вырастает простая травка

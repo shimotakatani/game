@@ -291,7 +291,7 @@ public class RestResource {
         return new MapCadrDto(mapStr,
                 new Long(map != null ? map.capacity : 0),
                 cadr,
-                (cadr+1)*MAX_CADR_LENGTH >= MAP_CAPACITY,
+                map == null || (cadr+1)*MAX_CADR_LENGTH >= map.capacity,
                 GameHelper.game.tactor.getInnerTime());
     }
 
